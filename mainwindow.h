@@ -24,5 +24,18 @@ private:
     QLineEdit* replace;
     QPushButton* fandr;
     QPushButton* rollback;
+    QPushButton* mN;
+    QPushButton* mNn;
+    QPushButton* mNxy;
+    QPushButton* mNnn;
+    QPushButton* mNpn;
+    QPushButton* mNxan;
+    QPushButton* mNnpy;
+    QPushButton* mCn;
+    QPushButton* mCna;
+    QPushButton* mYMD;
+    QPushButton* mHMS;
+    QPushButton* mE;
+    QPushButton* mExy;
 };
 #endif // MAINWINDOW_H
