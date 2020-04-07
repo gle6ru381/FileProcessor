@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "mainwidget.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -37,6 +36,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mHMS = new QPushButton("[hms]", this);
     mE = new QPushButton("[E]", this);
     mExy = new QPushButton("[Ex-y]", this);
+
+    mainWidget = new MainWidget(this);
+    layout->addWidget(mainWidget, 3, 1, 1, 2);
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
     maskLayout->addWidget(mN);

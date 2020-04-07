@@ -38,6 +38,6 @@ private:
     QPushButton* mHMS;
     QPushButton* mE;
     QPushButton* mExy;
-    MainWidget* mainWidget;)
+    MainWidget* mainWidget;
 };
 #endif // MAINWINDOW_H
