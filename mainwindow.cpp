@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mExy = new QPushButton("[Ex-y]", this);
 
     mainWidget = new MainWidget(this);
-    layout->addWidget(mainWidget, 3, 1, 1, 2);
+    layout->addWidget(mainWidget, 3, 1, 2, 2);
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
     maskLayout->addWidget(mN);

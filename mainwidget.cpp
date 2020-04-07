@@ -2,6 +2,7 @@
 #include <QDateTime>
 #include <QDropEvent>
 #include <QFileInfo>
+#include <QHeaderView>
 
 MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
 {
@@ -9,7 +10,10 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
     headers << "Имя"
             << "Расположение"
             << "Дата изменения";
+    this->setColumnCount(3);
     this->setHorizontalHeaderLabels(headers);
+    this->setAcceptDrops(true);
+    this->verticalHeader()->hide();
 }
 
 void MainWidget::dropEvent(QDropEvent* event)
@@ -32,5 +36,20 @@ void MainWidget::dropEvent(QDropEvent* event)
                 row, 2, new QTableWidgetItem(file.lastModified().toString()));
     }
 
+    event->acceptProposedAction();
+}
+
+void MainWidget::dragLeave(QDragLeaveEvent* event)
+{
+    event->accept();
+}
+
+void MainWidget::dragMove(QDragMoveEvent* event)
+{
+    event->acceptProposedAction();
+}
+
+void MainWidget::dragEnter(QDragEnterEvent* event)
+{
     event->acceptProposedAction();
 }

@@ -11,6 +11,9 @@ public:
 
 private:
     void dropEvent(QDropEvent*);
+    void dragLeave(QDragLeaveEvent*);
+    void dragEnterEvent(QDragEnterEvent*);
+    void dragMove(QDragMoveEvent*);
 };
 
 #endif // MAINWIDGET_H
