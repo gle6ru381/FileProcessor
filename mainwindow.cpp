@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "mainwidget.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QVBoxLayout>

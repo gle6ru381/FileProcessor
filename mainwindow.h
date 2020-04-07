@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "mainwidget.h"
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
@@ -37,5 +38,6 @@ private:
     QPushButton* mHMS;
     QPushButton* mE;
     QPushButton* mExy;
+    MainWidget* mainWidget;)
 };
 #endif // MAINWINDOW_H
