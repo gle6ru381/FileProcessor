@@ -12,10 +12,22 @@ PushInsert::PushInsert(QWidget* parent) : QTreeView(parent)
     connect(this,
             SIGNAL(doubleClicked(const QModelIndex&)),
             this,
-            SLOT(setRootIndex(const QModelIndex&)));
+            SLOT(selectInfo(const QModelIndex&)));
 }
 
-void PushInsert::setRootIndex(const QModelIndex& index)
+void PushInsert::selectInfo(const QModelIndex& index)
 {
-    QTreeView::setRootIndex(index);
+    QFileInfo* info = new QFileInfo(model->filePath(index));
+
+    emit selectIndex(info);
+}
+
+QFileInfoList PushInsert::selectedInfo() const
+{
+    auto indexes = selectedIndexes();
+    QFileInfoList infoList;
+    for (auto index : indexes) {
+        infoList.push_back(model->filePath(index));
+    }
+    return infoList;
 }

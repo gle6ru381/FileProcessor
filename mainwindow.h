@@ -36,9 +36,12 @@ private:
     QPushButton* mExy;
     QPushButton* browse;
     MainWidget* mainWidget;
+    PushInsert* pushInsert;
     QDialog* insertDialog;
 
 public slots:
     void clickBrowse();
+    void selectBrowse(QFileInfo*);
+    void clickOk();
 };
 #endif // MAINWINDOW_H

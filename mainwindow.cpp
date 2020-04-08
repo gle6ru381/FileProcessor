@@ -79,15 +79,36 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 void MainWindow::clickBrowse()
 {
     QGridLayout* layout = new QGridLayout(insertDialog);
-    PushInsert* pushInsert = new PushInsert(insertDialog);
+    pushInsert = new PushInsert(insertDialog);
     QPushButton* ok = new QPushButton("Ок", insertDialog);
     QPushButton* cancel = new QPushButton("Отмена", insertDialog);
+
+    connect(pushInsert,
+            SIGNAL(selectIndex(QFileInfo*)),
+            this,
+            SLOT(selectBrowse(QFileInfo*)));
+    connect(ok, SIGNAL(clicked()), this, SLOT(clickOk()));
+
     layout->addWidget(pushInsert, 0, 0, 2, 2);
     layout->addWidget(ok, 1, 0);
     layout->addWidget(cancel, 1, 1);
     insertDialog->setLayout(layout);
     insertDialog->resize(400, 400);
     insertDialog->exec();
+}
+
+void MainWindow::selectBrowse(QFileInfo* info)
+{
+    mainWidget->addElement(info);
+    insertDialog->close();
+}
+
+void MainWindow::clickOk()
+{
+    for (auto info : pushInsert->selectedInfo()) {
+        mainWidget->addElement(&info);
+    }
+    insertDialog->close();
 }
 
 MainWindow::~MainWindow()

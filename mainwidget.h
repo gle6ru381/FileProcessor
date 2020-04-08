@@ -10,6 +10,7 @@ class MainWidget : public QTableWidget {
     Q_OBJECT
 public:
     MainWidget(QWidget* parent = nullptr);
+    void addElement(QFileInfo*);
 
 private:
     void dropEvent(QDropEvent*) override;

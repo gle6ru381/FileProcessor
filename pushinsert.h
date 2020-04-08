@@ -11,9 +11,13 @@ private:
 
 public:
     PushInsert(QWidget* parent = nullptr);
+    QFileInfoList selectedInfo() const;
 
 public slots:
-    void setRootIndex(const QModelIndex& index) override;
+    void selectInfo(const QModelIndex& index);
+
+signals:
+    void selectIndex(QFileInfo*);
 };
 
 #endif // PUSHINSERT_H
