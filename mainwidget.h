@@ -17,6 +17,9 @@ private:
     void dragLeaveEvent(QDragLeaveEvent*) override;
     void dragEnterEvent(QDragEnterEvent*) override;
     void dragMoveEvent(QDragMoveEvent*) override;
+
+public slots:
+    void clearContents();
 };
 
 #endif // MAINWIDGET_H

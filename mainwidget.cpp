@@ -12,6 +12,7 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
             << "Местоположение";
     this->setColumnCount(3);
     this->setHorizontalHeaderLabels(headers);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     this->setColumnWidth(0, 100);
     this->setColumnWidth(1, 110);
     this->setColumnWidth(2, 250);
@@ -52,13 +53,16 @@ void MainWidget::addElement(QFileInfo* file)
     };
 
     std::function<void(QDir)> insertDir = [&, insert](QDir dir) {
-        for (auto file : dir.entryInfoList(
-                     QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+        foreach (
+                auto file,
+                dir.entryInfoList(
+                        QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
             if (file.isFile())
                 insert(&file);
             else
                 insertDir(file.absoluteFilePath());
         }
+        delete file;
     };
 
     if (file->isDir()) {
@@ -84,4 +88,9 @@ void MainWidget::dragMoveEvent(QDragMoveEvent* event)
 void MainWidget::dragEnterEvent(QDragEnterEvent* event)
 {
     event->acceptProposedAction();
+}
+
+void MainWidget::clearContents()
+{
+    setRowCount(0);
 }

@@ -33,9 +33,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mHMS = new QPushButton("[hms]", this);
     mE = new QPushButton("[E]", this);
     mExy = new QPushButton("[Ex-y]", this);
+    clear = new QPushButton("Очистить", this);
 
     mainWidget = new MainWidget(this);
     layout->addWidget(mainWidget, 3, 1, 3, 3);
+    layout->addWidget(clear, 6, 1);
+
+    connect(clear, SIGNAL(clicked()), mainWidget, SLOT(clearContents()));
 
     QVBoxLayout* fandrLayout = new QVBoxLayout(this);
     fandrLayout->addWidget(labFind);

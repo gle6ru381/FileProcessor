@@ -35,6 +35,7 @@ private:
     QPushButton* mE;
     QPushButton* mExy;
     QPushButton* browse;
+    QPushButton* clear;
     MainWidget* mainWidget;
     PushInsert* pushInsert;
     QDialog* insertDialog;
