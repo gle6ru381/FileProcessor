@@ -88,6 +88,7 @@ void MainWindow::clickBrowse()
             this,
             SLOT(selectBrowse(QFileInfo*)));
     connect(ok, SIGNAL(clicked()), this, SLOT(clickOk()));
+    connect(cancel, SIGNAL(clicked()), this, SLOT(clickCancel()));
 
     layout->addWidget(pushInsert, 0, 0, 2, 2);
     layout->addWidget(ok, 1, 0);
@@ -108,6 +109,11 @@ void MainWindow::clickOk()
     for (auto info : pushInsert->selectedInfo()) {
         mainWidget->addElement(&info);
     }
+    insertDialog->close();
+}
+
+void MainWindow::clickCancel()
+{
     insertDialog->close();
 }
 

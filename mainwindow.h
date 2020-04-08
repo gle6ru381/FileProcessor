@@ -43,5 +43,6 @@ public slots:
     void clickBrowse();
     void selectBrowse(QFileInfo*);
     void clickOk();
+    void clickCancel();
 };
 #endif // MAINWINDOW_H
