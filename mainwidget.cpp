@@ -1,6 +1,5 @@
 #include "mainwidget.h"
 #include <QDateTime>
-#include <QDir>
 #include <QDropEvent>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -36,6 +35,16 @@ void MainWidget::dropEvent(QDropEvent* event)
         this->setItem(row, 2, new QTableWidgetItem(file.filePath()));
     };
 
+    std::function<void(QDir)> insertDir = [&, insert](QDir dir) {
+        for (auto file : dir.entryInfoList(
+                     QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+            if (file.isFile())
+                insert(file);
+            else
+                insertDir(file.absoluteFilePath());
+        }
+    };
+
     if (!mimeData->hasUrls())
         return;
     for (QUrl url : mimeData->urls()) {
@@ -45,11 +54,7 @@ void MainWidget::dropEvent(QDropEvent* event)
         QFileInfo file = url.toLocalFile();
 
         if (file.isDir()) {
-            QDir dir(file.absoluteFilePath());
-            for (auto obj : dir.entryInfoList()) {
-                if (obj.isFile())
-                    insert(obj);
-            }
+            insertDir(file.absoluteFilePath());
         } else {
             insert(file);
         }

@@ -1,6 +1,7 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <QDir>
 #include <QMimeData>
 #include <QTableWidget>
 
