@@ -11,6 +11,9 @@ private:
 
 public:
     PushInsert(QWidget* parent = nullptr);
+
+public slots:
+    void setRootIndex(const QModelIndex& index) override;
 };
 
 #endif // PUSHINSERT_H

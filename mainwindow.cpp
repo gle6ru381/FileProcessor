@@ -60,6 +60,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     maskLayout->addWidget(mE);
     maskLayout->addWidget(mExy);
 
+    insertDialog = new QDialog(this);
+    browse = new QPushButton("Обзор...", this);
+    connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
+
+    layout->addWidget(browse, 6, 2);
+
     layout->addLayout(maskLayout, 3, 0);
     layout->addLayout(fandrLayout, 1, 1, Qt::AlignTop);
     layout->addLayout(rollbackLayout, 1, 2, Qt::AlignTop);
@@ -68,6 +74,20 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
     this->resize(800, 600);
+}
+
+void MainWindow::clickBrowse()
+{
+    QGridLayout* layout = new QGridLayout(insertDialog);
+    PushInsert* pushInsert = new PushInsert(insertDialog);
+    QPushButton* ok = new QPushButton("Ок", insertDialog);
+    QPushButton* cancel = new QPushButton("Отмена", insertDialog);
+    layout->addWidget(pushInsert, 0, 0, 2, 2);
+    layout->addWidget(ok, 1, 0);
+    layout->addWidget(cancel, 1, 1);
+    insertDialog->setLayout(layout);
+    insertDialog->resize(400, 400);
+    insertDialog->exec();
 }
 
 MainWindow::~MainWindow()

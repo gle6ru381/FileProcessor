@@ -12,7 +12,6 @@ public:
     MainWidget(QWidget* parent = nullptr);
 
 private:
-    PushInsert* pushInsert;
     void dropEvent(QDropEvent*) override;
     void dragLeaveEvent(QDragLeaveEvent*) override;
     void dragEnterEvent(QDragEnterEvent*) override;
