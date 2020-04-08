@@ -5,6 +5,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
     mask = new QLineEdit(this);
     QLabel* labMask = new QLabel("Маска имени", this);
@@ -18,10 +19,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     layout->addWidget(labMask, 1, 0, Qt::AlignTop);
     layout->addWidget(find, 0, 1);
     layout->addWidget(replace, 0, 2);
-    layout->addWidget(labFind, 1, 1, Qt::AlignTop);
-    layout->addWidget(labReplace, 1, 2, Qt::AlignTop);
-    layout->addWidget(fandr, 2, 1);
-    layout->addWidget(rollback, 2, 2);
 
     mN = new QPushButton("[N]", this);
     mNn = new QPushButton("[Nn]", this);
@@ -38,7 +35,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mExy = new QPushButton("[Ex-y]", this);
 
     mainWidget = new MainWidget(this);
-    layout->addWidget(mainWidget, 3, 1, 2, 2);
+    layout->addWidget(mainWidget, 3, 1, 3, 3);
+
+    QVBoxLayout* fandrLayout = new QVBoxLayout(this);
+    fandrLayout->addWidget(labFind);
+    fandrLayout->addWidget(fandr);
+
+    QVBoxLayout* rollbackLayout = new QVBoxLayout(this);
+    rollbackLayout->addWidget(labReplace);
+    rollbackLayout->addWidget(rollback);
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
     maskLayout->addWidget(mN);
@@ -54,11 +59,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     maskLayout->addWidget(mHMS);
     maskLayout->addWidget(mE);
     maskLayout->addWidget(mExy);
+
     layout->addLayout(maskLayout, 3, 0);
+    layout->addLayout(fandrLayout, 1, 1, Qt::AlignTop);
+    layout->addLayout(rollbackLayout, 1, 2, Qt::AlignTop);
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
+    this->resize(800, 600);
 }
 
 MainWindow::~MainWindow()

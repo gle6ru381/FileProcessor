@@ -8,10 +8,13 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
 {
     QStringList headers;
     headers << "Имя"
-            << "Расположение"
-            << "Дата изменения";
+            << "Дата изменения"
+            << "Местоположение";
     this->setColumnCount(3);
     this->setHorizontalHeaderLabels(headers);
+    this->setColumnWidth(0, 100);
+    this->setColumnWidth(1, 110);
+    this->setColumnWidth(2, 250);
     this->setAcceptDrops(true);
     this->verticalHeader()->hide();
 }
@@ -31,25 +34,30 @@ void MainWidget::dropEvent(QDropEvent* event)
 
         this->insertRow(row);
         this->setItem(row, 0, new QTableWidgetItem(file.fileName()));
-        this->setItem(row, 1, new QTableWidgetItem(file.filePath()));
         this->setItem(
-                row, 2, new QTableWidgetItem(file.lastModified().toString()));
+                row,
+                1,
+                new QTableWidgetItem(
+                        file.lastModified().toString(Qt::ISODate)));
+        this->setItem(row, 2, new QTableWidgetItem(file.filePath()));
     }
 
+    this->resizeColumnsToContents();
+    this->resizeRowsToContents();
     event->acceptProposedAction();
 }
 
-void MainWidget::dragLeave(QDragLeaveEvent* event)
+void MainWidget::dragLeaveEvent(QDragLeaveEvent* event)
 {
     event->accept();
 }
 
-void MainWidget::dragMove(QDragMoveEvent* event)
+void MainWidget::dragMoveEvent(QDragMoveEvent* event)
 {
     event->acceptProposedAction();
 }
 
-void MainWidget::dragEnter(QDragEnterEvent* event)
+void MainWidget::dragEnterEvent(QDragEnterEvent* event)
 {
     event->acceptProposedAction();
 }

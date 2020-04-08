@@ -10,10 +10,10 @@ public:
     MainWidget(QWidget* parent = nullptr);
 
 private:
-    void dropEvent(QDropEvent*);
-    void dragLeave(QDragLeaveEvent*);
-    void dragEnterEvent(QDragEnterEvent*);
-    void dragMove(QDragMoveEvent*);
+    void dropEvent(QDropEvent*) override;
+    void dragLeaveEvent(QDragLeaveEvent*) override;
+    void dragEnterEvent(QDragEnterEvent*) override;
+    void dragMoveEvent(QDragMoveEvent*) override;
 };
 
 #endif // MAINWIDGET_H
