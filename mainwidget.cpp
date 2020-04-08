@@ -12,6 +12,7 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
             << "Местоположение";
     this->setColumnCount(3);
     this->setHorizontalHeaderLabels(headers);
+    horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     this->setColumnWidth(0, 100);
     this->setColumnWidth(1, 110);
     this->setColumnWidth(2, 250);
@@ -23,46 +24,55 @@ void MainWidget::dropEvent(QDropEvent* event)
 {
     const QMimeData* mimeData = event->mimeData();
 
-    auto insert = [this](QFileInfo file) {
-        int row = this->rowCount();
-        this->insertRow(row);
-        this->setItem(row, 0, new QTableWidgetItem(file.fileName()));
-        this->setItem(
-                row,
-                1,
-                new QTableWidgetItem(
-                        file.lastModified().toString(Qt::ISODate)));
-        this->setItem(row, 2, new QTableWidgetItem(file.filePath()));
-    };
-
-    std::function<void(QDir)> insertDir = [&, insert](QDir dir) {
-        for (auto file : dir.entryInfoList(
-                     QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
-            if (file.isFile())
-                insert(file);
-            else
-                insertDir(file.absoluteFilePath());
-        }
-    };
-
     if (!mimeData->hasUrls())
         return;
     for (QUrl url : mimeData->urls()) {
         if (url.scheme() != "file") {
             continue;
         }
-        QFileInfo file = url.toLocalFile();
+        QFileInfo* info = new QFileInfo(url.toLocalFile());
+        addElement(info);
+    }
 
-        if (file.isDir()) {
-            insertDir(file.absoluteFilePath());
-        } else {
-            insert(file);
+    event->acceptProposedAction();
+}
+
+void MainWidget::addElement(QFileInfo* file)
+{
+    auto insert = [this](QFileInfo* file) {
+        int row = this->rowCount();
+        this->insertRow(row);
+        this->setItem(row, 0, new QTableWidgetItem(file->fileName()));
+        this->setItem(
+                row,
+                1,
+                new QTableWidgetItem(
+                        file->lastModified().toString(Qt::ISODate)));
+        this->setItem(row, 2, new QTableWidgetItem(file->filePath()));
+        delete file;
+    };
+
+    std::function<void(QDir)> insertDir = [&, insert](QDir dir) {
+        foreach (
+                auto file,
+                dir.entryInfoList(
+                        QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+            if (file.isFile())
+                insert(&file);
+            else
+                insertDir(file.absoluteFilePath());
         }
+        delete file;
+    };
+
+    if (file->isDir()) {
+        insertDir(file->absoluteFilePath());
+    } else {
+        insert(file);
     }
 
     this->resizeColumnsToContents();
     this->resizeRowsToContents();
-    event->acceptProposedAction();
 }
 
 void MainWidget::dragLeaveEvent(QDragLeaveEvent* event)
@@ -78,4 +88,9 @@ void MainWidget::dragMoveEvent(QDragMoveEvent* event)
 void MainWidget::dragEnterEvent(QDragEnterEvent* event)
 {
     event->acceptProposedAction();
+}
+
+void MainWidget::clearContents()
+{
+    setRowCount(0);
 }

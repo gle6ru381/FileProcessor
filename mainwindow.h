@@ -2,15 +2,11 @@
 #define MAINWINDOW_H
 
 #include "mainwidget.h"
+#include "pushinsert.h"
+#include <QDialog>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -38,6 +34,16 @@ private:
     QPushButton* mHMS;
     QPushButton* mE;
     QPushButton* mExy;
+    QPushButton* browse;
+    QPushButton* clear;
     MainWidget* mainWidget;
+    PushInsert* pushInsert;
+    QDialog* insertDialog;
+
+public slots:
+    void clickBrowse();
+    void selectBrowse(QFileInfo*);
+    void clickOk();
+    void clickCancel();
 };
 #endif // MAINWINDOW_H

@@ -33,9 +33,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mHMS = new QPushButton("[hms]", this);
     mE = new QPushButton("[E]", this);
     mExy = new QPushButton("[Ex-y]", this);
+    clear = new QPushButton("Очистить", this);
 
     mainWidget = new MainWidget(this);
     layout->addWidget(mainWidget, 3, 1, 3, 3);
+    layout->addWidget(clear, 6, 1);
+
+    connect(clear, SIGNAL(clicked()), mainWidget, SLOT(clearContents()));
 
     QVBoxLayout* fandrLayout = new QVBoxLayout(this);
     fandrLayout->addWidget(labFind);
@@ -60,6 +64,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     maskLayout->addWidget(mE);
     maskLayout->addWidget(mExy);
 
+    insertDialog = new QDialog(this);
+    browse = new QPushButton("Обзор...", this);
+    connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
+
+    layout->addWidget(browse, 6, 2);
+
     layout->addLayout(maskLayout, 3, 0);
     layout->addLayout(fandrLayout, 1, 1, Qt::AlignTop);
     layout->addLayout(rollbackLayout, 1, 2, Qt::AlignTop);
@@ -68,6 +78,47 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
     this->resize(800, 600);
+}
+
+void MainWindow::clickBrowse()
+{
+    QGridLayout* layout = new QGridLayout(insertDialog);
+    pushInsert = new PushInsert(insertDialog);
+    QPushButton* ok = new QPushButton("Ок", insertDialog);
+    QPushButton* cancel = new QPushButton("Отмена", insertDialog);
+
+    connect(pushInsert,
+            SIGNAL(selectIndex(QFileInfo*)),
+            this,
+            SLOT(selectBrowse(QFileInfo*)));
+    connect(ok, SIGNAL(clicked()), this, SLOT(clickOk()));
+    connect(cancel, SIGNAL(clicked()), this, SLOT(clickCancel()));
+
+    layout->addWidget(pushInsert, 0, 0, 2, 2);
+    layout->addWidget(ok, 1, 0);
+    layout->addWidget(cancel, 1, 1);
+    insertDialog->setLayout(layout);
+    insertDialog->resize(400, 400);
+    insertDialog->exec();
+}
+
+void MainWindow::selectBrowse(QFileInfo* info)
+{
+    mainWidget->addElement(info);
+    insertDialog->close();
+}
+
+void MainWindow::clickOk()
+{
+    for (auto info : pushInsert->selectedInfo()) {
+        mainWidget->addElement(&info);
+    }
+    insertDialog->close();
+}
+
+void MainWindow::clickCancel()
+{
+    insertDialog->close();
 }
 
 MainWindow::~MainWindow()
