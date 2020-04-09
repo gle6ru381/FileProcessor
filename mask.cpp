@@ -3,6 +3,7 @@
 Mask::Mask(QString name, QString expand, QString mask)
     : name(name), expand(expand), fullMask(mask)
 {
+    readName();
 }
 
 void Mask::readName()
@@ -151,6 +152,20 @@ void Mask::maskN(QString mask)
                 totalName += name.at(first);
             }
             return;
+        } else {
+            QString number;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber()) {
+                    number += c;
+                } else {
+                    throw 1;
+                }
+            }
+            int index = number.toInt() - 1;
+            if (index > name.size())
+                throw 2;
+            totalName += name.at(index);
         }
     } catch (int a) {
     }
