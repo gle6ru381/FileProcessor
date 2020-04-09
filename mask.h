@@ -12,11 +12,12 @@ public:
 private:
     QString const name;
     QString const expand;
-    QString mask;
+    QString fullMask;
     QString totalName;
 
     void readName();
     void readMask(QString mask);
+    void maskN(QString mask);
 };
 
 #endif // MASK_H
