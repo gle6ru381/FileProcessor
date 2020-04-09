@@ -1,4 +1,3 @@
-#include "../TestMask/readmask_test.h"
 #include "mainwindow.h"
 
 #include <QApplication>
@@ -6,7 +5,6 @@
 
 int main(int argc, char* argv[])
 {
-    freopen("log.log", "w", stdout);
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
