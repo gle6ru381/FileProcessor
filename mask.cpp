@@ -41,12 +41,13 @@ void Mask::maskN(QString mask)
                 else
                     throw 1;
             }
-            int Index = totalNumber.toInt();
+            int Index = totalNumber.toInt() - 1;
             if (Index > name.size())
                 throw 2;
             while (Index++ < name.size()) {
                 totalName += name.at(Index);
             }
+            return;
         } else if (mask.at(0) == '-') {
             QString totalNumber;
             for (int i = 1; i < mask.size(); i++) {
@@ -55,6 +56,43 @@ void Mask::maskN(QString mask)
                 else
                     throw 1;
             }
+            int diff = totalNumber.toInt() + 1;
+            if (diff - 1 > name.size())
+                throw 2;
+            for (int i = name.size() - diff; i < name.size(); i++) {
+                totalName += name.at(i);
+            }
+            return;
+        } else if (mask.contains("--")) {
+            QString number[2];
+            int choise = 0;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber()) {
+                    number[choise] += c;
+                } else if (c == '-') {
+                    if (mask.at(++i) == '-') {
+                        i++;
+                        choise = 1;
+                    } else {
+                        throw 1;
+                    }
+                } else
+                    throw 1;
+            }
+            if (number[0].isEmpty() || number[1].isEmpty()) {
+                throw 1;
+            }
+            int first = number[0].toInt() - 1;
+            int second = number[1].toInt();
+            if (first > name.size() || second > name.size())
+                throw 2;
+            int diff = name.size() - second;
+
+            while (first++ < diff) {
+                totalName += name.at(first);
+            }
+            return;
         }
     } catch (int a) {
     }
