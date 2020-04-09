@@ -71,6 +71,8 @@ void Mask::maskN(QString mask)
                 if (c.isNumber()) {
                     number[choise] += c;
                 } else if (c == '-') {
+                    if (choise == 1)
+                        throw 1;
                     if (mask.at(++i) == '-') {
                         i++;
                         choise = 1;
@@ -90,6 +92,32 @@ void Mask::maskN(QString mask)
             int diff = name.size() - second;
 
             while (first++ < diff) {
+                totalName += name.at(first);
+            }
+            return;
+        } else if (mask.contains('-')) {
+            QString number[2];
+            int choise = 0;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber()) {
+                    number[choise] += c;
+                } else if (c == '-') {
+                    if (choise == 1)
+                        throw 1;
+                    choise = 1;
+                } else
+                    throw 1;
+            }
+            if (number[0].isEmpty() || number[1].isEmpty()) {
+                throw 1;
+            }
+
+            int first = number[0].toInt() - 1;
+            int second = number[1].toInt() - 1;
+            if (first > second || second >= name.size())
+                throw 2;
+            while (first++ <= second) {
                 totalName += name.at(first);
             }
             return;
