@@ -1,8 +1,7 @@
 # Prerequisites
 *.d
-TestMask/*.pro*
-src/*.pro*
 build*
+*.pro.user*
 
 # Compiled Object files
 *.slo

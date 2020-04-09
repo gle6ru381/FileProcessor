@@ -4,4 +4,8 @@ CONFIG += qt warn_on depend_includepath testcase
 
 TEMPLATE = app
 
-SOURCES +=  tst_readmask.cpp
+SOURCES +=  \
+    readmask_test.cpp
+
+HEADERS += \
+    readmask_test.h
