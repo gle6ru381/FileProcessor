@@ -18,6 +18,9 @@ private:
     void readName();
     void readMask(QString mask);
     void maskN(QString mask);
+
+public:
+    QString getTotalName() const;
 };
 
 #endif // MASK_H

@@ -26,7 +26,10 @@ void Mask::readMask(QString mask)
 {
     switch (mask.at(0).unicode()) {
     case 'N': {
-        maskN(mask.remove(0, 1));
+        if (mask.size() == 1)
+            totalName += name;
+        else
+            maskN(mask.remove(0, 1));
     }
     }
 }
@@ -169,4 +172,9 @@ void Mask::maskN(QString mask)
         }
     } catch (int a) {
     }
+}
+
+QString Mask::getTotalName() const
+{
+    return totalName;
 }
