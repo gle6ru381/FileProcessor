@@ -5,7 +5,6 @@
 #include <QString>
 
 class Mask {
-    Q_OBJECT
 public:
     Mask(QString name, QString expand, QString mask);
 

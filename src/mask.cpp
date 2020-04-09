@@ -12,10 +12,9 @@ void Mask::readName()
         if (fullMask.at(i) == '[') {
             QString mask;
             while (fullMask.at(++i) != ']') {
-                mask += name.at(i);
+                mask += fullMask.at(i);
             }
             readMask(mask);
-            i++;
         } else {
             totalName += fullMask.at(i);
         }

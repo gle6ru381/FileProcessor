@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "mainwidget.h"
+#include "mask.h"
 #include "pushinsert.h"
 #include <QDialog>
 #include <QLineEdit>
