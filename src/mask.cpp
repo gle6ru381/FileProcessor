@@ -38,6 +38,12 @@ void Mask::readMask(QString mask)
             maskE(mask.remove(0, 1));
         return;
     }
+    case 'Y':
+    case 'M':
+    case 'D': {
+        maskYMD(mask);
+        return;
+    }
     }
 }
 
@@ -206,6 +212,27 @@ void Mask::maskE(QString mask)
                 throw 2;
             for (int i = begin; i <= end; i++) {
                 totalName += expand.at(i);
+            }
+        }
+    } catch (int a) {
+    }
+}
+
+void Mask::maskYMD(QString mask)
+{
+    try {
+        if (!mask.endsWith('Y') && !mask.endsWith('M') && !mask.endsWith('D'))
+            throw 1;
+        for (int i = 0; i < mask.size(); i++) {
+            QChar c = mask.at(i);
+            if (c == 'Y') {
+                totalName += '%' + c + '%';
+            } else if (c == 'M') {
+                totalName += '%' + c + '%';
+            } else if (c == 'D') {
+                totalName += '%' + c + '%';
+            } else {
+                totalName += c;
             }
         }
     } catch (int a) {
