@@ -60,6 +60,10 @@ void ReadMask_Test::test_case1_data()
                                << "txt"
                                << "[ms;h]-[s;hm]"
                                << "%m%%s%;%h%-%s%;%h%%m%";
+    QTest::newRow("testIter") << "text"
+                              << "txt"
+                              << "[C]"
+                              << "%C0%";
 }
 
 void ReadMask_Test::test_case1()

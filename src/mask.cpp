@@ -50,6 +50,12 @@ void Mask::readMask(QString mask)
         maskHMS(mask);
         return;
     }
+    case 'C': {
+        if (mask.size() == 1) {
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
+            stepValue.push_back(1);
+        }
+    }
     }
 }
 
@@ -264,6 +270,10 @@ void Mask::maskHMS(QString mask)
         }
     } catch (int a) {
     }
+}
+
+void Mask::maskC(QString mask)
+{
 }
 
 QString Mask::getTotalName() const
