@@ -48,6 +48,18 @@ void ReadMask_Test::test_case1_data()
                                << "txt"
                                << "abc[Y,M,D]-[D;M;Y]"
                                << "abc%Y%,%M%,%D%-%D%;%M%;%Y%";
+    QTest::newRow("testTime1") << "text"
+                               << "txt"
+                               << "[hms]-[h-m-s]"
+                               << "%h%%m%%s%-%h%-%m%-%s%";
+    QTest::newRow("testTime2") << "abs"
+                               << "text"
+                               << "[N]-[h];[m;h;s]-[YMD]"
+                               << "abs-%h%;%m%;%h%;%s%-%Y%%M%%D%";
+    QTest::newRow("testTime3") << "nbd"
+                               << "txt"
+                               << "[ms;h]-[s;hm]"
+                               << "%m%%s%;%h%-%s%;%h%%m%";
 }
 
 void ReadMask_Test::test_case1()

@@ -19,6 +19,7 @@ private:
     void maskN(QString mask);
     void maskE(QString mask);
     void maskYMD(QString mask);
+    void maskHMS(QString mask);
 
 public:
     QString getTotalName() const;
