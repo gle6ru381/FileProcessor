@@ -302,6 +302,20 @@ void Mask::maskC(QString mask)
             beginValue.push_back(number[0].toUInt());
             stepValue.push_back(totalStep);
             return;
+        } else {
+            QString number;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber())
+                    number += c;
+                else
+                    throw 1;
+            }
+
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
+            beginValue.push_back(number.toUInt());
+            stepValue.push_back(1);
+            return;
         }
     } catch (int a) {
     }

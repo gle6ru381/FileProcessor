@@ -92,6 +92,8 @@ void ReadMask_Test::test_step_and_value_data()
                            << QVector<uint>{6, 5, 10};
     QTest::newRow("test3") << "[C][C][C1,1]" << QVector<uint>{1, 1, 1}
                            << QVector<uint>{1, 1, 1};
+    QTest::newRow("test4") << "[C5][C][C12]" << QVector<uint>{1, 1, 1}
+                           << QVector<uint>{5, 1, 12};
 }
 
 void ReadMask_Test::test_step_and_value()
