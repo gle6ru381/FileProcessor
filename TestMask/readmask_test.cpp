@@ -32,6 +32,14 @@ void ReadMask_Test::test_case1_data()
                        << "projct"
                        << "[N2-4][N3,2]-[E].[E1-3]"
                        << "bcdcd-projct.pro";
+    QTest::newRow("testDate") << "abcd"
+                              << "txt"
+                              << "[Y-M-D]"
+                              << "%Y%-%M%-%D%";
+    QTest::newRow("testDate2") << "text"
+                               << "txt"
+                               << "[D:Y:M]"
+                               << "%D%:%Y%:%M%";
 }
 
 void ReadMask_Test::test_case1()
