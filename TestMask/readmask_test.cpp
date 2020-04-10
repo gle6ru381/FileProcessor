@@ -40,6 +40,14 @@ void ReadMask_Test::test_case1_data()
                                << "txt"
                                << "[D:Y:M]"
                                << "%D%:%Y%:%M%";
+    QTest::newRow("testDate3") << "bcd"
+                               << "txt"
+                               << "[N][M]-[E][Y-D]"
+                               << "bcd%M%-txt%Y%-%D%";
+    QTest::newRow("testDate4") << "file"
+                               << "txt"
+                               << "abc[Y,M,D]-[D;M;Y]"
+                               << "abc%Y%,%M%,%D%-%D%;%M%;%Y%";
 }
 
 void ReadMask_Test::test_case1()
