@@ -2,6 +2,8 @@
 *.d
 build*
 *.pro.user*
+src/*.autosave
+TestMask/*.autosave
 
 # Compiled Object files
 *.slo

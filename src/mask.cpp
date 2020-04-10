@@ -29,6 +29,14 @@ void Mask::readMask(QString mask)
             totalName += name;
         else
             maskN(mask.remove(0, 1));
+        return;
+    }
+    case 'E': {
+        if (mask.size() == 1)
+            totalName += expand;
+        else
+            maskE(mask.remove(0, 1));
+        return;
     }
     }
 }
@@ -47,8 +55,8 @@ void Mask::maskN(QString mask)
             int Index = totalNumber.toInt() - 1;
             if (Index > name.size())
                 throw 2;
-            while (Index++ < name.size()) {
-                totalName += name.at(Index);
+            for (int i = Index; i < name.size(); i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.at(0) == '-') {
@@ -94,8 +102,8 @@ void Mask::maskN(QString mask)
                 throw 2;
             int diff = name.size() - second;
 
-            while (first++ < diff) {
-                totalName += name.at(first);
+            for (int i = first; i < diff; i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.contains('-')) {
@@ -120,8 +128,8 @@ void Mask::maskN(QString mask)
             int second = number[1].toInt() - 1;
             if (first > second || second >= name.size())
                 throw 2;
-            while (first++ <= second) {
-                totalName += name.at(first);
+            for (int i = first; i <= second; i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.contains(',')) {
@@ -150,8 +158,8 @@ void Mask::maskN(QString mask)
                 throw 2;
             }
 
-            while (first++ < second) {
-                totalName += name.at(first);
+            for (int i = first; i < second; i++) {
+                totalName += name.at(i);
             }
             return;
         } else {
@@ -168,6 +176,37 @@ void Mask::maskN(QString mask)
             if (index > name.size())
                 throw 2;
             totalName += name.at(index);
+        }
+    } catch (int a) {
+    }
+}
+
+void Mask::maskE(QString mask)
+{
+    try {
+        if (!mask.contains('-')) {
+            throw 1;
+        } else {
+            QString number[2];
+            int choise = 0;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber()) {
+                    number[choise] += c;
+                } else if (c == '-') {
+                    if (choise == 1)
+                        throw 1;
+                    choise = 1;
+                } else
+                    throw 1;
+            }
+            int begin = number[0].toInt() - 1;
+            int end = number[1].toInt() - 1;
+            if (end < begin || begin > expand.size() || end >= expand.size())
+                throw 2;
+            for (int i = begin; i <= end; i++) {
+                totalName += expand.at(i);
+            }
         }
     } catch (int a) {
     }

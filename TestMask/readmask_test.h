@@ -10,6 +10,7 @@ public:
     ~ReadMask_Test();
 
 private slots:
+    void test_case1_data();
     void test_case1();
 };
 
