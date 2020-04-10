@@ -55,8 +55,8 @@ void Mask::maskN(QString mask)
             int Index = totalNumber.toInt() - 1;
             if (Index > name.size())
                 throw 2;
-            while (Index++ < name.size()) {
-                totalName += name.at(Index);
+            for (int i = Index; i < name.size(); i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.at(0) == '-') {
@@ -102,8 +102,8 @@ void Mask::maskN(QString mask)
                 throw 2;
             int diff = name.size() - second;
 
-            while (first++ < diff) {
-                totalName += name.at(first);
+            for (int i = first; i < diff; i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.contains('-')) {
@@ -128,8 +128,8 @@ void Mask::maskN(QString mask)
             int second = number[1].toInt() - 1;
             if (first > second || second >= name.size())
                 throw 2;
-            while (first++ <= second) {
-                totalName += name.at(first);
+            for (int i = first; i <= second; i++) {
+                totalName += name.at(i);
             }
             return;
         } else if (mask.contains(',')) {
@@ -158,8 +158,8 @@ void Mask::maskN(QString mask)
                 throw 2;
             }
 
-            while (first++ < second) {
-                totalName += name.at(first);
+            for (int i = first; i < second; i++) {
+                totalName += name.at(i);
             }
             return;
         } else {
@@ -204,8 +204,8 @@ void Mask::maskE(QString mask)
             int end = number[1].toInt() - 1;
             if (end < begin || begin > expand.size() || end >= expand.size())
                 throw 2;
-            while (begin++ <= end) {
-                totalName += expand.at(begin);
+            for (int i = begin; i <= end; i++) {
+                totalName += expand.at(i);
             }
         }
     } catch (int a) {
