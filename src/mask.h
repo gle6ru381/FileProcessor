@@ -15,6 +15,7 @@ private:
     QString fullMask;
     QString totalName;
     QVector<uint> stepValue;
+    QVector<uint> beginValue;
 
     void readName();
     void readMask(QString mask);
@@ -27,6 +28,7 @@ private:
 public:
     QString getTotalName() const;
     uint step(uint index) const;
+    uint begin(uint index) const;
 };
 
 #endif // MASK_H

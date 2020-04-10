@@ -64,6 +64,10 @@ void ReadMask_Test::test_case1_data()
                               << "txt"
                               << "[C]"
                               << "%C0%";
+    QTest::newRow("testIter2") << "text"
+                               << "txt"
+                               << "[C2,1][C]"
+                               << "%C0%%C1%";
 }
 
 void ReadMask_Test::test_case1()
@@ -74,6 +78,32 @@ void ReadMask_Test::test_case1()
     QFETCH(QString, result);
     Mask a(name, expand, mask);
     QCOMPARE(a.getTotalName(), result);
+}
+
+void ReadMask_Test::test_step_and_value_data()
+{
+    QTest::addColumn<QString>("mask");
+    QTest::addColumn<QVector<uint>>("resultStep");
+    QTest::addColumn<QVector<uint>>("resultBegin");
+
+    QTest::newRow("test1") << "[C1,4][C][C2,5]" << QVector<uint>{4, 1, 5}
+                           << QVector<uint>{1, 1, 2};
+    QTest::newRow("test2") << "[C6,2][C5,2][C10,2]" << QVector<uint>{2, 2, 2}
+                           << QVector<uint>{6, 5, 10};
+    QTest::newRow("test3") << "[C][C][C1,1]" << QVector<uint>{1, 1, 1}
+                           << QVector<uint>{1, 1, 1};
+}
+
+void ReadMask_Test::test_step_and_value()
+{
+    QFETCH(QString, mask);
+    QFETCH(QVector<uint>, resultStep);
+    QFETCH(QVector<uint>, resultBegin);
+    Mask a("text", "txt", mask);
+    for (int i = 0; i < 3; i++) {
+        QCOMPARE(a.step(i), resultStep.at(i));
+        QCOMPARE(a.begin(i), resultBegin.at(i));
+    }
 }
 
 QTEST_APPLESS_MAIN(ReadMask_Test)
