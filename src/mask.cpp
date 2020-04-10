@@ -294,9 +294,13 @@ void Mask::maskC(QString mask)
                 } else
                     throw 1;
             }
+            uint totalStep = number[1].toUInt();
+            if (totalStep == 0)
+                throw 2;
+
             totalName += "%C" + QString::number(stepValue.size()) + "%";
             beginValue.push_back(number[0].toUInt());
-            stepValue.push_back(number[1].toUInt());
+            stepValue.push_back(totalStep);
             return;
         }
     } catch (int a) {
