@@ -12,6 +12,8 @@ public:
 private slots:
     void test_case1_data();
     void test_case1();
+    void test_step_and_value();
+    void test_step_and_value_data();
 };
 
 #endif // READMASK_TEST_H

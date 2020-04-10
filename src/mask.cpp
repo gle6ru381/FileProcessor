@@ -50,6 +50,15 @@ void Mask::readMask(QString mask)
         maskHMS(mask);
         return;
     }
+    case 'C': {
+        if (mask.size() == 1) {
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
+            stepValue.push_back(1);
+            beginValue.push_back(1);
+        } else {
+            maskC(mask.remove(0, 1));
+        }
+    }
     }
 }
 
@@ -266,7 +275,63 @@ void Mask::maskHMS(QString mask)
     }
 }
 
+void Mask::maskC(QString mask)
+{
+    try {
+        if (!mask.at(0).isNumber())
+            throw 1;
+        if (mask.contains(',')) {
+            QString number[2];
+            int choise = 0;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber()) {
+                    number[choise] += c;
+                } else if (c == ',') {
+                    if (choise == 1)
+                        throw 1;
+                    choise = 1;
+                } else
+                    throw 1;
+            }
+            uint totalStep = number[1].toUInt();
+            if (totalStep == 0)
+                throw 2;
+
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
+            beginValue.push_back(number[0].toUInt());
+            stepValue.push_back(totalStep);
+            return;
+        } else {
+            QString number;
+            for (int i = 0; i < mask.size(); i++) {
+                QChar c = mask.at(i);
+                if (c.isNumber())
+                    number += c;
+                else
+                    throw 1;
+            }
+
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
+            beginValue.push_back(number.toUInt());
+            stepValue.push_back(1);
+            return;
+        }
+    } catch (int a) {
+    }
+}
+
 QString Mask::getTotalName() const
 {
     return totalName;
+}
+
+uint Mask::step(uint index) const
+{
+    return stepValue.at(index);
+}
+
+uint Mask::begin(uint index) const
+{
+    return beginValue.at(index);
 }
