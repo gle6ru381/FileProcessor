@@ -27,8 +27,8 @@ private:
 
 public:
     QString getTotalName() const;
-    uint step(uint index) const;
-    uint begin(uint index) const;
+    uint Count_C() const;
+    uint getValue_C(uint index);
 };
 
 #endif // MASK_H
