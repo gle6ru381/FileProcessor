@@ -5,20 +5,21 @@
 #include <QString>
 #include <QVector>
 
-class Mask {
+class Mask { //Класс для обработки масок
 public:
     Mask(QString name, QString expand, QString mask);
 
 private:
-    QString const name;
-    QString const expand;
-    QString fullMask;
-    QString totalName;
-    QVector<uint> stepValue;
-    QVector<uint> beginValue;
+    QString const name;      //Имя для замены
+    QString const expand;    //Расширение файла
+    QString fullMask;        //Полная маска файла
+    QString totalName;       //Итоговое имя
+    QVector<uint> stepValue; //Массив, хранящий значение шагов для шаблона [C]
+    QVector<uint> beginValue; //Массив, хранящий значения чисел для подстановки
+                              //для шаблона [C]
 
-    void readName();
-    void readMask(QString mask);
+    void readName(); //Основныя функция прочтения имени
+    void readMask(QString mask); //функция прочтения отдельных масок
     void maskN(QString mask);
     void maskE(QString mask);
     void maskYMD(QString mask);
@@ -26,8 +27,8 @@ private:
     void maskC(QString mask);
 
 public:
-    QString getTotalName() const;
-    uint Count_C() const;
+    QString getTotalName() const; //Возвращает итоговое имя
+    uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
     uint getValue_C(uint index);
 };
 
