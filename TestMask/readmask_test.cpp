@@ -87,31 +87,21 @@ void ReadMask_Test::test_case1()
 void ReadMask_Test::test_step_and_value_data()
 {
     QTest::addColumn<QString>("mask");
-    QTest::addColumn<QVector<uint>>("resultStep");
-    QTest::addColumn<QVector<uint>>("resultBegin");
+    QTest::addColumn<QVector<uint>>("resultValue");
 
-    QTest::newRow("test1") << "[C1,4][C][C2,5]" << QVector<uint>{4, 1, 5}
-                           << QVector<uint>{1, 1, 2};
-    QTest::newRow("test2") << "[C6,2][C5,2][C10,2]" << QVector<uint>{2, 2, 2}
-                           << QVector<uint>{6, 5, 10};
-    QTest::newRow("test3") << "[C][C][C1,1]" << QVector<uint>{1, 1, 1}
-                           << QVector<uint>{1, 1, 1};
-    QTest::newRow("test4") << "[C5][C][C12]" << QVector<uint>{1, 1, 1}
-                           << QVector<uint>{5, 1, 12};
-    QTest::newRow("test5") << "[C]-[C5,1];[C55],[C51,12]"
-                           << QVector<uint>{1, 1, 1, 12}
-                           << QVector<uint>{1, 5, 55, 51};
+    QTest::newRow("test1") << "[C1,2]" << QVector<uint>{1, 3, 5, 7};
+    QTest::newRow("test2") << "[C5,5]" << QVector<uint>{5, 10, 15, 20};
+    QTest::newRow("test3") << "[C]" << QVector<uint>{1, 2, 3, 4, 5};
 }
 
 void ReadMask_Test::test_step_and_value()
 {
     QFETCH(QString, mask);
-    QFETCH(QVector<uint>, resultStep);
-    QFETCH(QVector<uint>, resultBegin);
+    QFETCH(QVector<uint>, resultValue);
+
     Mask a("text", "txt", mask);
-    for (int i = 0; i < resultStep.size(); i++) {
-        QCOMPARE(a.step(i), resultStep.at(i));
-        QCOMPARE(a.begin(i), resultBegin.at(i));
+    for (int i = 0; i < resultValue.size(); i++) {
+        QCOMPARE(a.getValue_C(0), resultValue[i]);
     }
 }
 
