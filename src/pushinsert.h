@@ -4,10 +4,11 @@
 #include <QFileSystemModel>
 #include <QTreeView>
 
-class PushInsert : public QTreeView {
+class PushInsert : public QTreeView { //Класс дерева системы, которое вызывается
+                                      //при нажатии "Обзор..."
     Q_OBJECT
 private:
-    QFileSystemModel* model;
+    QFileSystemModel* model; //Модель системы
 
 public:
     PushInsert(QWidget* parent = nullptr);
@@ -15,9 +16,9 @@ public:
 
 public slots:
     void selectInfo(const QModelIndex& index);
-
+    //Вызывается при двойном нажатии на файл и вызывает selectIndex
 signals:
-    void selectIndex(QFileInfo*);
+    void selectIndex(QFileInfo*); //Передает информацию о файле
 };
 
 #endif // PUSHINSERT_H

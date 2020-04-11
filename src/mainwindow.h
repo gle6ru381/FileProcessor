@@ -42,9 +42,9 @@ private:
     QDialog* insertDialog;
 
 public slots:
-    void clickBrowse();
-    void selectBrowse(QFileInfo*);
-    void clickOk();
-    void clickCancel();
+    void clickBrowse(); //Нажатие на "Обзор..."
+    void selectBrowse(QFileInfo*); //Сюда передается selectIndex из PushInsert
+    void clickOk();                //Нажатие на Ок в доп.окне
+    void clickCancel(); //Нажатие на Отмена в доп.окне
 };
 #endif // MAINWINDOW_H
