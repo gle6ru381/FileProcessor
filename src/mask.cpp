@@ -326,12 +326,14 @@ QString Mask::getTotalName() const
     return totalName;
 }
 
-uint Mask::step(uint index) const
+uint Mask::Count_C() const
 {
-    return stepValue.at(index);
+    return stepValue.size();
 }
 
-uint Mask::begin(uint index) const
+uint Mask::getValue_C(uint index)
 {
-    return beginValue.at(index);
+    uint value = beginValue.at(index);
+    beginValue[index] += stepValue[index];
+    return value;
 }
