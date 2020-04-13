@@ -35,43 +35,43 @@ void ReadMask_Test::test_case1_data()
     QTest::newRow("testDate") << "abcd"
                               << "txt"
                               << "[Y-M-D]"
-                              << "%Y%-%M%-%D%";
+                              << "/Y/-/M/-/D/";
     QTest::newRow("testDate2") << "text"
                                << "txt"
                                << "[D:Y:M]"
-                               << "%D%:%Y%:%M%";
+                               << "/D/:/Y/:/M/";
     QTest::newRow("testDate3") << "bcd"
                                << "txt"
                                << "[N][M]-[E][Y-D]"
-                               << "bcd%M%-txt%Y%-%D%";
+                               << "bcd/M/-txt/Y/-/D/";
     QTest::newRow("testDate4") << "file"
                                << "txt"
                                << "abc[Y,M,D]-[D;M;Y]"
-                               << "abc%Y%,%M%,%D%-%D%;%M%;%Y%";
+                               << "abc/Y/,/M/,/D/-/D/;/M/;/Y/";
     QTest::newRow("testTime1") << "text"
                                << "txt"
                                << "[hms]-[h-m-s]"
-                               << "%h%%m%%s%-%h%-%m%-%s%";
+                               << "/h//m//s/-/h/-/m/-/s/";
     QTest::newRow("testTime2") << "abs"
                                << "text"
                                << "[N]-[h];[m;h;s]-[YMD]"
-                               << "abs-%h%;%m%;%h%;%s%-%Y%%M%%D%";
+                               << "abs-/h/;/m/;/h/;/s/-/Y//M//D/";
     QTest::newRow("testTime3") << "nbd"
                                << "txt"
                                << "[ms;h]-[s;hm]"
-                               << "%m%%s%;%h%-%s%;%h%%m%";
+                               << "/m//s/;/h/-/s/;/h//m/";
     QTest::newRow("testIter") << "text"
                               << "txt"
                               << "[C]"
-                              << "%C0%";
+                              << "/C0/";
     QTest::newRow("testIter2") << "text"
                                << "txt"
                                << "[C2,1][C]"
-                               << "%C0%%C1%";
+                               << "/C0//C1/";
     QTest::newRow("testIter3") << "text"
                                << "txt"
                                << "[C2,1]-[YMD][N];[C10]"
-                               << "%C0%-%Y%%M%%D%text;%C1%";
+                               << "/C0/-/Y//M//D/text;/C1/";
 }
 
 void ReadMask_Test::test_case1()
