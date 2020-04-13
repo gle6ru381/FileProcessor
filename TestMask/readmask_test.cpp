@@ -81,6 +81,7 @@ void ReadMask_Test::test_case1()
     QFETCH(QString, mask);
     QFETCH(QString, result);
     Mask a(name, expand, mask);
+    a.readName();
     QCOMPARE(a.getTotalName(), result);
 }
 
@@ -100,6 +101,7 @@ void ReadMask_Test::test_step_and_value()
     QFETCH(QVector<uint>, resultValue);
 
     Mask a("text", "txt", mask);
+    a.readName();
     for (int i = 0; i < resultValue.size(); i++) {
         QCOMPARE(a.getValue_C(0), resultValue[i]);
     }

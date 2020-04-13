@@ -3,7 +3,6 @@
 Mask::Mask(QString name, QString expand, QString mask)
     : name(name), expand(expand), fullMask(mask)
 {
-    readName();
 }
 
 void Mask::readName()
