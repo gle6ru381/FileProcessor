@@ -157,6 +157,12 @@ void MainWindow::initStyleSheet()
             "0.25 white, stop: 0.5 Gainsboro); selection-color: black; "
             "background-color: #F7F7F7; text-align: center;} ");
 }
+void MainWindow::readText()
+{
+QString strMask = mask->text();
+QString strFind = find->text();
+QString strReplace = replace->text();
+}
 
 void MainWindow::clickBrowse()
 {
