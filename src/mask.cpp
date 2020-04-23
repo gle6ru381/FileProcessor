@@ -3,6 +3,7 @@
 Mask::Mask(QString name, QString expand, QString mask)
     : name(name), expand(expand), fullMask(mask)
 {
+    readName();
 }
 
 void Mask::readName()
@@ -51,7 +52,7 @@ void Mask::readMask(QString mask)
     }
     case 'C': {
         if (mask.size() == 1) {
-            totalName += "/C" + QString::number(stepValue.size()) + "/";
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
             stepValue.push_back(1);
             beginValue.push_back(1);
         } else {
@@ -240,11 +241,11 @@ void Mask::maskYMD(QString mask)
         for (int i = 0; i < mask.size(); i++) {
             QChar c = mask.at(i);
             if (c == 'Y') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else if (c == 'M') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else if (c == 'D') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else {
                 totalName += c;
             }
@@ -261,11 +262,11 @@ void Mask::maskHMS(QString mask)
         for (int i = 0; i < mask.size(); i++) {
             QChar c = mask.at(i);
             if (c == 'h') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else if (c == 's') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else if (c == 'm') {
-                totalName += '/' + c + '/';
+                totalName += '%' + c + '%';
             } else {
                 totalName += c;
             }
@@ -297,7 +298,7 @@ void Mask::maskC(QString mask)
             if (totalStep == 0)
                 throw 2;
 
-            totalName += "/C" + QString::number(stepValue.size()) + "/";
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
             beginValue.push_back(number[0].toUInt());
             stepValue.push_back(totalStep);
             return;
@@ -311,7 +312,7 @@ void Mask::maskC(QString mask)
                     throw 1;
             }
 
-            totalName += "/C" + QString::number(stepValue.size()) + "/";
+            totalName += "%C" + QString::number(stepValue.size()) + "%";
             beginValue.push_back(number.toUInt());
             stepValue.push_back(1);
             return;

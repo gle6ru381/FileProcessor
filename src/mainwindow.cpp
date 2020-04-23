@@ -80,6 +80,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     setCentralWidget(centralWidget);
     this->resize(800, 600);
 }
+void MainWindow::readText()
+{
+QString strMask = mask->text();
+QString strFind = find->text();
+QString strReplace = replace->text();
+}
 
 void MainWindow::clickBrowse()
 {

@@ -46,5 +46,6 @@ public slots:
     void selectBrowse(QFileInfo*); //Сюда передается selectIndex из PushInsert
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
+    void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
 };
 #endif // MAINWINDOW_H

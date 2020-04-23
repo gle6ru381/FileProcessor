@@ -17,6 +17,8 @@ private:
     QVector<uint> stepValue; //Массив, хранящий значение шагов для шаблона [C]
     QVector<uint> beginValue; //Массив, хранящий значения чисел для подстановки
                               //для шаблона [C]
+
+    void readName(); //Основныя функция прочтения имени
     void readMask(QString mask); //функция прочтения отдельных масок
     void maskN(QString mask);
     void maskE(QString mask);
@@ -25,7 +27,6 @@ private:
     void maskC(QString mask);
 
 public:
-    void readName(); //Основныя функция прочтения имени
     QString getTotalName() const; //Возвращает итоговое имя
     uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
     uint getValue_C(uint index);
