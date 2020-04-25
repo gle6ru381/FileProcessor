@@ -218,9 +218,7 @@ void Mask::maskE(QString mask)
             } else
                 throw 1;
         }
-        int begin = number[0].toInt() - 1;
-        int end = number[1].toInt() - 1;
-        totalName += QString("/En") + begin + "-" + end + '/';
+        totalName += QString("/En") + number[0] + "-" + number[1] + '/';
     }
 }
 

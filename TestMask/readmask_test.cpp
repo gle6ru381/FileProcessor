@@ -23,7 +23,7 @@ void ReadMask_Test::test_case1_data()
                        << "t-text";
     QTest::newRow("3") << "text"
                        << "[E1-3][N]"
-                       << "/En0-2/text";
+                       << "/En1-3/text";
     QTest::newRow("4") << "abcd"
                        << "[N2-4][N3,2]-[E].[E1-3]"
                        << "bcdcd-/E/./En1-3/";
