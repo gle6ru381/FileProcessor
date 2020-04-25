@@ -1,7 +1,6 @@
 #include "mask.h"
 
-Mask::Mask(QString name, QString expand, QString mask)
-    : name(name), expand(expand), fullMask(mask)
+Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
 }
 
@@ -32,7 +31,7 @@ void Mask::readMask(QString mask)
     }
     case 'E': {
         if (mask.size() == 1)
-            totalName += expand;
+            totalName += "/E/";
         else
             maskE(mask.remove(0, 1));
         return;
@@ -203,32 +202,23 @@ void Mask::maskN(QString mask)
 
 void Mask::maskE(QString mask)
 {
-    try {
-        if (!mask.contains('-')) {
-            throw 1;
-        } else {
-            QString number[2];
-            int choise = 0;
-            for (int i = 0; i < mask.size(); i++) {
-                QChar c = mask.at(i);
-                if (c.isNumber()) {
-                    number[choise] += c;
-                } else if (c == '-') {
-                    if (choise == 1)
-                        throw 1;
-                    choise = 1;
-                } else
+    if (!mask.contains('-')) {
+        throw 1;
+    } else {
+        QString number[2];
+        int choise = 0;
+        for (int i = 0; i < mask.size(); i++) {
+            QChar c = mask.at(i);
+            if (c.isNumber()) {
+                number[choise] += c;
+            } else if (c == '-') {
+                if (choise == 1)
                     throw 1;
-            }
-            int begin = number[0].toInt() - 1;
-            int end = number[1].toInt() - 1;
-            if (end < begin || begin > expand.size() || end >= expand.size())
-                throw 2;
-            for (int i = begin; i <= end; i++) {
-                totalName += expand.at(i);
-            }
+                choise = 1;
+            } else
+                throw 1;
         }
-    } catch (int a) {
+        totalName += QString("/En") + number[0] + "-" + number[1] + '/';
     }
 }
 
