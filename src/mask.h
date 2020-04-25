@@ -7,11 +7,10 @@
 
 class Mask { //Класс для обработки масок
 public:
-    Mask(QString name, QString expand, QString mask);
+    Mask(QString name, QString mask);
 
 private:
     QString const name;      //Имя для замены
-    QString const expand;    //Расширение файла
     QString fullMask;        //Полная маска файла
     QString totalName;       //Итоговое имя
     QVector<uint> stepValue; //Массив, хранящий значение шагов для шаблона [C]
