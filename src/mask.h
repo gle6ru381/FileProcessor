@@ -30,4 +30,17 @@ public:
     uint getValue_C(uint index);
 };
 
+enum class TypeError { Semantic, Number };
+
+struct ExceptionMask {
+    TypeError const type;
+    QString const mask;
+    QString const expected;
+
+    ExceptionMask(
+            TypeError const type,
+            QString const mask,
+            QString const expected = "\0");
+};
+
 #endif // MASK_H
