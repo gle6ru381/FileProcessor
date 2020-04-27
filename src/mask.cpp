@@ -397,6 +397,7 @@ void Mask::maskC(QString mask)
         beginValue.push_back(number[0].toUInt());
         stepValue.push_back(totalStep);
         return;
+
     } else {
         QString number;
         for (int i = 0; i < mask.size(); i++) {
