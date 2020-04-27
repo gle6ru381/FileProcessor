@@ -255,7 +255,9 @@ void Mask::maskN(QString mask)
 void Mask::maskE(QString mask)
 {
     if (!mask.contains('-')) {
-        throw 1;
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[Ex-y] начиная с ") + fullMaskIndex);
     } else {
         QString number[2];
         int choise = 0;
@@ -265,10 +267,14 @@ void Mask::maskE(QString mask)
                 number[choise] += c;
             } else if (c == '-') {
                 if (choise == 1)
-                    throw 1;
+                    throw ExceptionMask(
+                            TypeError::Semantic,
+                            QString("[Ex-y] начиная с ") + fullMaskIndex);
                 choise = 1;
             } else
-                throw 1;
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[Ex-y] начиная с ") + fullMaskIndex);
         }
         totalName += QString("/En") + number[0] + "-" + number[1] + '/';
     }
