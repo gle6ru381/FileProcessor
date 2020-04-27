@@ -227,6 +227,7 @@ void Mask::maskN(QString mask)
         for (int i = first; i < second; i++) {
             totalName += name.at(i);
         }
+
         return;
     } else {
         QString number;
