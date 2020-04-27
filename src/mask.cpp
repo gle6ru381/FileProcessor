@@ -283,15 +283,38 @@ void Mask::maskE(QString mask)
 void Mask::maskYMD(QString mask)
 {
     if (!mask.endsWith('Y') && !mask.endsWith('M') && !mask.endsWith('D'))
-        throw 1;
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[YMD] начиная с ") + fullMaskIndex);
+    bool findY = false;
+    bool findM = false;
+    bool findD = false;
     for (int i = 0; i < mask.size(); i++) {
         QChar c = mask.at(i);
         if (c == 'Y') {
+            if (findY)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[YMD] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findY = true;
         } else if (c == 'M') {
+            if (findM)
+                ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[YMD] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findM = true;
         } else if (c == 'D') {
+            if (findD)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[YMD] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findD = true;
         } else {
             totalName += c;
         }
@@ -301,15 +324,40 @@ void Mask::maskYMD(QString mask)
 void Mask::maskHMS(QString mask)
 {
     if (!mask.endsWith('h') && !mask.endsWith('s') && !mask.endsWith('m'))
-        throw 1;
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[hms] начиная с ") + fullMaskIndex);
+
+    bool findH = false;
+    bool findM = false;
+    bool findS = false;
+
     for (int i = 0; i < mask.size(); i++) {
         QChar c = mask.at(i);
         if (c == 'h') {
+            if (findH)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[hms] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findH = true;
         } else if (c == 's') {
+            if (findS)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[hms] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findS = true;
         } else if (c == 'm') {
+            if (findM)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[hms] начиная с ") + fullMaskIndex);
+
             totalName += '/' + c + '/';
+            findM = true;
         } else {
             totalName += c;
         }
