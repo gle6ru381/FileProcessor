@@ -65,7 +65,10 @@ void ReadMask_Test::test_case1()
     QFETCH(QString, mask);
     QFETCH(QString, result);
     Mask a(name, mask);
-    a.readName();
+    try {
+        a.readName();
+    } catch (ExceptionMask) {
+    }
     QCOMPARE(a.getTotalName(), result);
 }
 
