@@ -418,12 +418,12 @@ void Mask::maskC(QString mask)
     }
 }
 
-QString Mask::getTotalName() const
+inline QString Mask::getTotalName() const
 {
     return totalName;
 }
 
-uint Mask::Count_C() const
+inline uint Mask::Count_C() const
 {
     return stepValue.size();
 }
