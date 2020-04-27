@@ -367,7 +367,9 @@ void Mask::maskHMS(QString mask)
 void Mask::maskC(QString mask)
 {
     if (!mask.at(0).isNumber())
-        throw 1;
+        throw ExceptionMask(
+                TypeError::Semantic, QString("[C] начиная с ") + fullMaskIndex);
+
     if (mask.contains(',')) {
         QString number[2];
         int choise = 0;
@@ -377,14 +379,21 @@ void Mask::maskC(QString mask)
                 number[choise] += c;
             } else if (c == ',') {
                 if (choise == 1)
-                    throw 1;
+                    throw ExceptionMask(
+                            TypeError::Semantic,
+                            QString("[Cn,a] начиная с ") + fullMaskIndex);
                 choise = 1;
             } else
-                throw 1;
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[C] начиная с ") + fullMaskIndex);
         }
         uint totalStep = number[1].toUInt();
         if (totalStep == 0)
-            throw 2;
+            throw ExceptionMask(
+                    TypeError::Number,
+                    QString("[Nn] начиная с ") + fullMaskIndex,
+                    QString("шаг больше нуля"));
 
         totalName += "/C" + QString::number(stepValue.size()) + "/";
         beginValue.push_back(number[0].toUInt());
@@ -397,7 +406,9 @@ void Mask::maskC(QString mask)
             if (c.isNumber())
                 number += c;
             else
-                throw 1;
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[C] начиная с ") + fullMaskIndex);
         }
 
         totalName += "/C" + QString::number(stepValue.size()) + "/";
