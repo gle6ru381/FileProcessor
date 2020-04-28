@@ -10,15 +10,14 @@ ExceptionMask::ExceptionMask(
 {
 }
 
-static int nameIndex = 0;
 static int fullMaskIndex = 0;
 
 void Mask::readName()
 {
-    for (nameIndex = 0; nameIndex < fullMask.size(); nameIndex++) {
+    for (int nameIndex = 0; nameIndex < fullMask.size(); nameIndex++) {
+        fullMaskIndex = nameIndex;
+        QString mask;
         if (fullMask.at(nameIndex) == '[') {
-            fullMaskIndex = nameIndex;
-            QString mask;
             while (fullMask.at(++nameIndex) != ']') {
                 mask += fullMask.at(nameIndex);
             }
