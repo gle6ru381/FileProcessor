@@ -21,20 +21,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     layout->addWidget(find, 0, 1);
     layout->addWidget(replace, 0, 2);
 
-    mN = new QPushButton("[N]", this);
-    mNn = new QPushButton("[Nn]", this);
-    mNxy = new QPushButton("[Nx-y]", this);
-    mNnn = new QPushButton("[Nn-]", this);
-    mNpn = new QPushButton("[N-n]", this);
-    mNxan = new QPushButton("[Nx,n]", this);
-    mNnpy = new QPushButton("[Nn--y]", this);
-    mCn = new QPushButton("[Cn]", this);
-    mCna = new QPushButton("[Cn,a]", this);
-    mYMD = new QPushButton("[YMD]", this);
-    mHMS = new QPushButton("[hms]", this);
-    mE = new QPushButton("[E]", this);
-    mExy = new QPushButton("[Ex-y]", this);
-    clear = new QPushButton("Очистить", this);
+    buttonMaskInit();
 
     mainWidget = new MainWidget(this);
     layout->addWidget(mainWidget, 3, 1, 3, 3);
@@ -51,6 +38,11 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     rollbackLayout->addWidget(rollback);
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
+    QFrame* maskFrame = new QFrame;
+    maskFrame->setLayout(maskLayout);
+    maskFrame->setObjectName("maskButtonFrame");
+    maskFrame->setFrameStyle(QFrame::Raised);
+    maskFrame->setFrameShape(QFrame::StyledPanel);
     maskLayout->addWidget(mN);
     maskLayout->addWidget(mNn);
     maskLayout->addWidget(mNxy);
@@ -65,13 +57,24 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     maskLayout->addWidget(mE);
     maskLayout->addWidget(mExy);
 
+    this->setStyleSheet(
+            "QPushButton {border-style: "
+            "outset; border-width: 3px; border-color: #c0c0c0;} "
+            "QPushButton:hover {border-style: ridge; border-width: "
+            "3px;} "
+            "QPushButton:pressed {border-style: inset; border-width: "
+            "3px;} "
+            "QFrame#maskButtonFrame {border: 2px; border-radius: 4px; "
+            "border-style: inset; border-width: 3px; "
+            "border-color: #c0c0c0;}");
+
     insertDialog = new QDialog(this);
     browse = new QPushButton("Обзор...", this);
     connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
 
     layout->addWidget(browse, 6, 2);
+    layout->addWidget(maskFrame, 3, 0);
 
-    layout->addLayout(maskLayout, 3, 0);
     layout->addLayout(fandrLayout, 1, 1, Qt::AlignTop);
     layout->addLayout(rollbackLayout, 1, 2, Qt::AlignTop);
 
@@ -79,6 +82,37 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
     this->resize(800, 600);
+}
+
+void MainWindow::buttonMaskInit()
+{
+    mN = new QPushButton("[N]", this);
+    mN->setObjectName("maskButton");
+    mNn = new QPushButton("[Nn]", this);
+    mNn->setObjectName("maskButton");
+    mNxy = new QPushButton("[Nx-y]", this);
+    mNxy->setObjectName("maskButton");
+    mNnn = new QPushButton("[Nn-]", this);
+    mNnn->setObjectName("maskButton");
+    mNpn = new QPushButton("[N-n]", this);
+    mNpn->setObjectName("maskButton");
+    mNxan = new QPushButton("[Nx,n]", this);
+    mNxan->setObjectName("maskButton");
+    mNnpy = new QPushButton("[Nn--y]", this);
+    mNnpy->setObjectName("maskButton");
+    mCn = new QPushButton("[Cn]", this);
+    mCn->setObjectName("maskButton");
+    mCna = new QPushButton("[Cn,a]", this);
+    mCna->setObjectName("maskButton");
+    mYMD = new QPushButton("[YMD]", this);
+    mYMD->setObjectName("maskButton");
+    mHMS = new QPushButton("[hms]", this);
+    mHMS->setObjectName("maskButton");
+    mE = new QPushButton("[E]", this);
+    mE->setObjectName("maskButton");
+    mExy = new QPushButton("[Ex-y]", this);
+    mExy->setObjectName("maskButton");
+    clear = new QPushButton("Очистить", this);
 }
 
 void MainWindow::clickBrowse()

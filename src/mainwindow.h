@@ -41,6 +41,8 @@ private:
     PushInsert* pushInsert;
     QDialog* insertDialog;
 
+    void buttonMaskInit();
+
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
     void selectBrowse(QFileInfo*); //Сюда передается selectIndex из PushInsert
