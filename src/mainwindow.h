@@ -44,6 +44,7 @@ private:
 
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
+    void initStyleSheet();
 
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."

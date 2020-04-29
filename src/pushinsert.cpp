@@ -1,4 +1,5 @@
 #include "pushinsert.h"
+#include <QHeaderView>
 
 PushInsert::PushInsert(QWidget* parent) : QTreeView(parent)
 {
@@ -8,6 +9,10 @@ PushInsert::PushInsert(QWidget* parent) : QTreeView(parent)
     hideColumn(1);
     hideColumn(2);
     setColumnWidth(0, 250);
+    QHeaderView* header = this->header();
+    header->setSectionsMovable(false);
+    header->setSectionResizeMode(QHeaderView::Fixed);
+    this->setHeader(header);
 
     connect(this,
             SIGNAL(doubleClicked(const QModelIndex&)),

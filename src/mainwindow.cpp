@@ -14,27 +14,38 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     replace = new QLineEdit(this);
     QLabel* labFind = new QLabel("Найти", this);
     QLabel* labReplace = new QLabel("Заменить", this);
+
     fandr = new QPushButton("Найти и заменить", this);
     rollback = new QPushButton("Откат", this);
+    fandr->setObjectName("mainButton");
+    rollback->setObjectName("mainButton");
+
     layout->addWidget(mask, 0, 0);
     layout->addWidget(labMask, 1, 0, Qt::AlignTop);
-    layout->addWidget(find, 0, 1);
-    layout->addWidget(replace, 0, 2);
+    layout->addWidget(find, 0, 2);
+    layout->addWidget(replace, 0, 1);
 
     buttonMaskInit();
 
     mainWidget = new MainWidget(this);
+
+    mainWidget->setStyleSheet(
+            "QHeaderView::section {background-color: #F4F4F4; border-style: "
+            "none; border-bottom: 1px outset #E5E5E5; font-size: 14px; "
+            "border-right: 2px outset #E7E7E7;} "
+            "QHeaderView::section:checked {font-weight: normal;}"
+            "QHeaderView {background-color: #F5F5F5;}");
     layout->addWidget(mainWidget, 3, 1, 3, 3);
     layout->addWidget(clear, 6, 1);
 
     connect(clear, SIGNAL(clicked()), mainWidget, SLOT(clearContents()));
 
     QVBoxLayout* fandrLayout = new QVBoxLayout(this);
-    fandrLayout->addWidget(labFind);
+    fandrLayout->addWidget(labReplace);
     fandrLayout->addWidget(fandr);
 
     QVBoxLayout* rollbackLayout = new QVBoxLayout(this);
-    rollbackLayout->addWidget(labReplace);
+    rollbackLayout->addWidget(labFind);
     rollbackLayout->addWidget(rollback);
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
@@ -42,44 +53,29 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     buttonLayoutInit(maskLayout, maskFrame);
 
-    this->setStyleSheet(
-            "QPushButton#maskButton {border-style: "
-            "outset; border-width: 3px; border-color: #c0c0c0; padding: 10px;} "
-            "QPushButton#maskButton:hover {border-style: ridge; border-width: "
-            "3px;} "
-            "QPushButton#maskButton:pressed {border-style: inset; "
-            "border-width: 3px; color: #00006f;} "
-            "QFrame#maskButtonFrame {border: 1px; border-radius: 3px; "
-            "border-style: inset; border-width: 2px; "
-            "border-color: #c0c0c0;} "
-            "QLabel {font-size: 13px} "
-            "QLineEdit {border: 2px Gainsboro; border-radius: 3px; "
-            "border-style: inset; border-width: 2px;} "
-            "MainWidget {border: 2px Gainsboro; border-radius: 2px;"
-            "border-style: inset; selection-background-color: "
-            "qlineargradient(x1:0, y1:0, x2:0, y2:2, stop: 0 Gainsboro, stop: "
-            "0.25 white, stop: 0.5 Gainsboro); selection-color: black; "
-            "background-color: snow; text-align: center;} ");
-    mainWidget->setStyleSheet(
-            "QHeaderView::section {background-color: snow; border-style: "
-            "none; border-bottom: 1px inset gray; font-size: 15px; "
-            "border-right: 1px inset gray;} "
-            "QHeaderView::section:checked {font-weight: normal;}"
-            "QHeaderView {background-color: snow;}");
-
     insertDialog = new QDialog(this);
+    insertDialog->setStyleSheet(
+            "QPushButton {background-color: "
+            "#EAEAEA; border: 2px outset "
+            "#A1A1A1; padding: 5px;} "
+            "QPushButton:pressed {background-color: #E5E5E5; border: 1px ridge "
+            "#A1A1A1;} "
+            "PushInsert {border: 2px inset #A1A1A1; border-radius: 3px;}");
     browse = new QPushButton("Обзор...", this);
+    browse->setObjectName("mainButton");
     connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
 
     layout->addWidget(browse, 6, 2);
     layout->addWidget(maskFrame, 3, 0);
 
-    layout->addLayout(fandrLayout, 1, 1, Qt::AlignTop);
-    layout->addLayout(rollbackLayout, 1, 2, Qt::AlignTop);
+    layout->addLayout(fandrLayout, 1, 2, Qt::AlignTop);
+    layout->addLayout(rollbackLayout, 1, 1, Qt::AlignTop);
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
+
+    initStyleSheet();
     this->resize(800, 600);
 }
 
@@ -112,6 +108,7 @@ void MainWindow::buttonMaskInit()
     mExy = new QPushButton("[Ex-y]", this);
     mExy->setObjectName("maskButton");
     clear = new QPushButton("Очистить", this);
+    clear->setObjectName("mainButton");
 }
 
 void MainWindow::buttonLayoutInit(QVBoxLayout* maskLayout, QFrame* maskFrame)
@@ -135,12 +132,51 @@ void MainWindow::buttonLayoutInit(QVBoxLayout* maskLayout, QFrame* maskFrame)
     maskLayout->addWidget(mExy);
 }
 
+void MainWindow::initStyleSheet()
+{
+    this->setStyleSheet(
+            "QPushButton#maskButton {border-style: "
+            "outset; border-width: 3px; border-color: #9C9C9C; padding: 10px; "
+            "background-color: #EEEEEE; border-radius: 1px;} "
+            "QPushButton#maskButton:pressed {border-style: ridge; "
+            "border-width: 2px; background-color: #E3E3E3;} "
+            "QPushButton#mainButton {background-color: qlineargradient(x1:0, "
+            "y1:0, x2:1, y2:1, stop: 0 #DADADA, "
+            "stop: 0.52 WhiteSmoke, stop: 0.97 #DADADA); border-style: none; "
+            "padding: 7px;} "
+            "QPushButton#mainButton:hover {background-color: "
+            "qlineargradient(x1:0, "
+            "y1:0, x2:1, y2:1, stop: 0 #CFCFCF, "
+            "stop: 0.52 WhiteSmoke, stop: 0.97 #CFCFCF);} "
+            "QPushButton#mainButton:pressed {background-color: "
+            "qlineargradient(x1:0, y1:0, x2:1, y2:1, stop: 0 #EAEAEA, "
+            "stop: 0.52 #DADADA, stop: 0.97 #EAEAEA);} "
+            "QFrame#maskButtonFrame {background-color: #E6E6E6; border: 1px; "
+            "border-radius: 3px; "
+            "border-style: inset; border-width: 2px; "
+            "border-color: #c0c0c0;} "
+            "QLabel {font-size: 13px} "
+            "QLineEdit {border: 2px Gainsboro; border-radius: 3px; "
+            "border-style: inset; border-width: 2px;} "
+            "MainWidget {border: 2px Gainsboro; border-radius: 3px;"
+            "border-style: inset; selection-background-color: "
+            "qlineargradient(x1:0, y1:0, x2:0, y2:2, stop: 0 Gainsboro, stop: "
+            "0.25 white, stop: 0.5 Gainsboro); selection-color: black; "
+            "background-color: #F7F7F7; text-align: center;} ");
+}
+
 void MainWindow::clickBrowse()
 {
-    QGridLayout* layout = new QGridLayout(insertDialog);
+    QVBoxLayout* layout = new QVBoxLayout(insertDialog);
+    QHBoxLayout* buttonLayout = new QHBoxLayout(insertDialog);
     pushInsert = new PushInsert(insertDialog);
-    QPushButton* ok = new QPushButton("Ок", insertDialog);
-    QPushButton* cancel = new QPushButton("Отмена", insertDialog);
+    QPushButton* ok = new QPushButton("Ок");
+    QPushButton* cancel = new QPushButton("Отмена");
+
+    pushInsert->setStyleSheet(
+            "QHeaderView::section {background-color: #F0F0F0;} "
+            "QHeaderView {background-color: #F0F0F0;} "
+            "background-color: #F0F0F0;");
 
     connect(pushInsert,
             SIGNAL(selectIndex(QFileInfo*)),
@@ -149,11 +185,12 @@ void MainWindow::clickBrowse()
     connect(ok, SIGNAL(clicked()), this, SLOT(clickOk()));
     connect(cancel, SIGNAL(clicked()), this, SLOT(clickCancel()));
 
-    layout->addWidget(pushInsert, 0, 0, 2, 2);
-    layout->addWidget(ok, 1, 0);
-    layout->addWidget(cancel, 1, 1);
+    layout->addWidget(pushInsert);
+    buttonLayout->addWidget(ok);
+    buttonLayout->addWidget(cancel);
+    layout->addLayout(buttonLayout);
     insertDialog->setLayout(layout);
-    insertDialog->resize(400, 400);
+    insertDialog->resize(400, 500);
     insertDialog->exec();
 }
 
