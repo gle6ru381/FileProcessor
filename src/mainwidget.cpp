@@ -32,6 +32,7 @@ void MainWidget::dropEvent(QDropEvent* event)
         }
         QFileInfo* info = new QFileInfo(url.toLocalFile());
         addElement(info);
+        delete info;
     }
 
     event->acceptProposedAction();
@@ -50,24 +51,27 @@ void MainWidget::addElement(QFileInfo* file)
                 new QTableWidgetItem(
                         file->lastModified().toString(Qt::ISODate)));
         this->setItem(row, 2, new QTableWidgetItem(file->filePath()));
-        delete file;
     };
 
-    std::function<void(QDir)> insertDir = [&, insert](QDir dir) {
+    std::function<void(QDir*)> insertDir = [&, insert](QDir* dir) {
         foreach (
                 auto file,
-                dir.entryInfoList(
+                dir->entryInfoList(
                         QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
             if (file.isFile())
                 insert(&file);
-            else
-                insertDir(file.absoluteFilePath());
+            else {
+                QDir* subDir = new QDir(file.absoluteFilePath());
+                insertDir(subDir);
+                delete subDir;
+            }
         }
-        delete file;
     };
 
     if (file->isDir()) {
-        insertDir(file->absoluteFilePath());
+        QDir* dir = new QDir(file->absoluteFilePath());
+        insertDir(dir);
+        delete dir;
     } else {
         insert(file);
     }

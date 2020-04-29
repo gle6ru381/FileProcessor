@@ -53,14 +53,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     buttonLayoutInit(maskLayout, maskFrame);
 
-    insertDialog = new QDialog(this);
-    insertDialog->setStyleSheet(
-            "QPushButton {background-color: "
-            "#EAEAEA; border: 2px outset "
-            "#A1A1A1; padding: 5px;} "
-            "QPushButton:pressed {background-color: #E5E5E5; border: 1px ridge "
-            "#A1A1A1;} "
-            "PushInsert {border: 2px inset #A1A1A1; border-radius: 3px;}");
     browse = new QPushButton("Обзор...", this);
     browse->setObjectName("mainButton");
     connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
@@ -167,11 +159,19 @@ void MainWindow::initStyleSheet()
 
 void MainWindow::clickBrowse()
 {
+    insertDialog = new QDialog(this);
+    insertDialog->setStyleSheet(
+            "QPushButton {background-color: "
+            "#EAEAEA; border: 2px outset "
+            "#A1A1A1; padding: 5px;} "
+            "QPushButton:pressed {background-color: #E5E5E5; border: 1px ridge "
+            "#A1A1A1;} "
+            "PushInsert {border: 2px inset #A1A1A1; border-radius: 3px;}");
+    pushInsert = new PushInsert(insertDialog);
     QVBoxLayout* layout = new QVBoxLayout(insertDialog);
     QHBoxLayout* buttonLayout = new QHBoxLayout(insertDialog);
-    pushInsert = new PushInsert(insertDialog);
-    QPushButton* ok = new QPushButton("Ок");
-    QPushButton* cancel = new QPushButton("Отмена");
+    QPushButton* ok = new QPushButton("Ок", insertDialog);
+    QPushButton* cancel = new QPushButton("Отмена", insertDialog);
 
     pushInsert->setStyleSheet(
             "QHeaderView::section {background-color: #F0F0F0;} "
@@ -198,6 +198,7 @@ void MainWindow::selectBrowse(QFileInfo* info)
 {
     mainWidget->addElement(info);
     insertDialog->close();
+    delete insertDialog;
 }
 
 void MainWindow::clickOk()
@@ -206,11 +207,13 @@ void MainWindow::clickOk()
         mainWidget->addElement(&info);
     }
     insertDialog->close();
+    delete insertDialog;
 }
 
 void MainWindow::clickCancel()
 {
     insertDialog->close();
+    delete insertDialog;
 }
 
 MainWindow::~MainWindow()
