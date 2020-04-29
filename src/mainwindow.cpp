@@ -2,6 +2,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -43,15 +44,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     this->setStyleSheet(
             "QPushButton#maskButton {border-style: "
-            "outset; border-width: 3px; border-color: #c0c0c0; padding: 10px"
-            ";} "
+            "outset; border-width: 3px; border-color: #c0c0c0; padding: 10px;} "
             "QPushButton#maskButton:hover {border-style: ridge; border-width: "
             "3px;} "
             "QPushButton#maskButton:pressed {border-style: inset; "
             "border-width: 3px; color: #00006f;} "
             "QFrame#maskButtonFrame {border: 1px; border-radius: 3px; "
             "border-style: inset; border-width: 2px; "
-            "border-color: #c0c0c0;}");
+            "border-color: #c0c0c0;} "
+            "QLabel {font-size: 13px} "
+            "QLineEdit {border: 2px Gainsboro; border-radius: 3px; "
+            "border-style: inset; border-width: 2px;}");
 
     insertDialog = new QDialog(this);
     browse = new QPushButton("Обзор...", this);
