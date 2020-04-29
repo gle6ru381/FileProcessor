@@ -54,7 +54,18 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
             "border-color: #c0c0c0;} "
             "QLabel {font-size: 13px} "
             "QLineEdit {border: 2px Gainsboro; border-radius: 3px; "
-            "border-style: inset; border-width: 2px;}");
+            "border-style: inset; border-width: 2px;} "
+            "MainWidget {border: 2px Gainsboro; border-radius: 2px;"
+            "border-style: inset; selection-background-color: "
+            "qlineargradient(x1:0, y1:0, x2:0, y2:2, stop: 0 Gainsboro, stop: "
+            "0.25 white, stop: 0.5 Gainsboro); selection-color: black; "
+            "background-color: snow; text-align: center;} ");
+    mainWidget->setStyleSheet(
+            "QHeaderView::section {background-color: snow; border-style: "
+            "none; border-bottom: 1px inset gray; font-size: 15px; "
+            "border-right: 1px inset gray;} "
+            "QHeaderView::section:checked {font-weight: normal;}"
+            "QHeaderView {background-color: snow;}");
 
     insertDialog = new QDialog(this);
     browse = new QPushButton("Обзор...", this);

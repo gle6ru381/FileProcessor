@@ -14,8 +14,8 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
     this->setHorizontalHeaderLabels(headers);
     horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     this->setColumnWidth(0, 100);
-    this->setColumnWidth(1, 110);
-    this->setColumnWidth(2, 250);
+    this->setColumnWidth(1, 140);
+    this->setColumnWidth(2, 275);
     this->setAcceptDrops(true);
     this->verticalHeader()->hide();
 }
@@ -42,6 +42,7 @@ void MainWidget::addElement(QFileInfo* file)
     auto insert = [this](QFileInfo* file) {
         int row = this->rowCount();
         this->insertRow(row);
+        this->setRowHeight(row, 30);
         this->setItem(row, 0, new QTableWidgetItem(file->fileName()));
         this->setItem(
                 row,
@@ -72,7 +73,6 @@ void MainWidget::addElement(QFileInfo* file)
     }
 
     this->resizeColumnsToContents();
-    this->resizeRowsToContents();
 }
 
 void MainWidget::dragLeaveEvent(QDragLeaveEvent* event)
