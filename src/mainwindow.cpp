@@ -43,12 +43,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     this->setStyleSheet(
             "QPushButton#maskButton {border-style: "
-            "outset; border-width: 3px; border-color: #c0c0c0;} "
+            "outset; border-width: 3px; border-color: #c0c0c0; padding: 10px"
+            ";} "
             "QPushButton#maskButton:hover {border-style: ridge; border-width: "
             "3px;} "
             "QPushButton#maskButton:pressed {border-style: inset; "
-            "border-width: "
-            "3px;} "
+            "border-width: 3px; color: #00006f;} "
             "QFrame#maskButtonFrame {border: 1px; border-radius: 3px; "
             "border-style: inset; border-width: 2px; "
             "border-color: #c0c0c0;}");
