@@ -2,7 +2,6 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
-#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -39,33 +38,19 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     QVBoxLayout* maskLayout = new QVBoxLayout(this);
     QFrame* maskFrame = new QFrame;
-    maskFrame->setLayout(maskLayout);
-    maskFrame->setObjectName("maskButtonFrame");
-    maskFrame->setFrameStyle(QFrame::Raised);
-    maskFrame->setFrameShape(QFrame::StyledPanel);
-    maskLayout->addWidget(mN);
-    maskLayout->addWidget(mNn);
-    maskLayout->addWidget(mNxy);
-    maskLayout->addWidget(mNnn);
-    maskLayout->addWidget(mNpn);
-    maskLayout->addWidget(mNxan);
-    maskLayout->addWidget(mNnpy);
-    maskLayout->addWidget(mCn);
-    maskLayout->addWidget(mCna);
-    maskLayout->addWidget(mYMD);
-    maskLayout->addWidget(mHMS);
-    maskLayout->addWidget(mE);
-    maskLayout->addWidget(mExy);
+
+    buttonLayoutInit(maskLayout, maskFrame);
 
     this->setStyleSheet(
-            "QPushButton {border-style: "
+            "QPushButton#maskButton {border-style: "
             "outset; border-width: 3px; border-color: #c0c0c0;} "
-            "QPushButton:hover {border-style: ridge; border-width: "
+            "QPushButton#maskButton:hover {border-style: ridge; border-width: "
             "3px;} "
-            "QPushButton:pressed {border-style: inset; border-width: "
+            "QPushButton#maskButton:pressed {border-style: inset; "
+            "border-width: "
             "3px;} "
-            "QFrame#maskButtonFrame {border: 2px; border-radius: 4px; "
-            "border-style: inset; border-width: 3px; "
+            "QFrame#maskButtonFrame {border: 1px; border-radius: 3px; "
+            "border-style: inset; border-width: 2px; "
             "border-color: #c0c0c0;}");
 
     insertDialog = new QDialog(this);
@@ -113,6 +98,27 @@ void MainWindow::buttonMaskInit()
     mExy = new QPushButton("[Ex-y]", this);
     mExy->setObjectName("maskButton");
     clear = new QPushButton("Очистить", this);
+}
+
+void MainWindow::buttonLayoutInit(QVBoxLayout* maskLayout, QFrame* maskFrame)
+{
+    maskFrame->setLayout(maskLayout);
+    maskFrame->setObjectName("maskButtonFrame");
+    maskFrame->setFrameStyle(QFrame::Raised);
+    maskFrame->setFrameShape(QFrame::StyledPanel);
+    maskLayout->addWidget(mN);
+    maskLayout->addWidget(mNn);
+    maskLayout->addWidget(mNxy);
+    maskLayout->addWidget(mNnn);
+    maskLayout->addWidget(mNpn);
+    maskLayout->addWidget(mNxan);
+    maskLayout->addWidget(mNnpy);
+    maskLayout->addWidget(mCn);
+    maskLayout->addWidget(mCna);
+    maskLayout->addWidget(mYMD);
+    maskLayout->addWidget(mHMS);
+    maskLayout->addWidget(mE);
+    maskLayout->addWidget(mExy);
 }
 
 void MainWindow::clickBrowse()

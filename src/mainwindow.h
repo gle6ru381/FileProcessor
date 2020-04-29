@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QVBoxLayout>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -42,6 +43,7 @@ private:
     QDialog* insertDialog;
 
     void buttonMaskInit();
+    void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
 
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
