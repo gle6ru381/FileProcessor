@@ -7,6 +7,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    exception = false;
     this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
     mask = new QLineEdit(this);
@@ -166,22 +167,31 @@ void MainWindow::readText()
     QString strReplace = replace->text();
 
     try {
-        if (strMask.contains(QRegExp("\\S*[\\/\\\\:\\*\\?\\|\\<\\>]\\S*"))
-            || strFind.isEmpty()) {
+        if (strMask.contains(QRegExp("\\S*[\\/\\\\:\\*\\?\\|\\<\\>]\\S*"))) {
             throw 1;
         }
         if (strFind.contains(
-                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
-            || strFind.isEmpty()) {
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))) {
             throw 2;
         }
         if (strReplace.contains(
-                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
-            || strFind.isEmpty()) {
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))) {
             throw 3;
         }
+        if (strReplace.isEmpty()) {
+            throw 4;
+        }
+        if (strMask.isEmpty()) {
+            throw 5;
+        }
+
+        Mask mask(strFind, strMask);
+        mask.readName();
+        exception = false;
     } catch (int a) {
-        QDialog* dialog = new QDialog(this);
+        exception = true;
+        QMessageBox* dialog = new QMessageBox(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
         QLabel* error;
         switch (a) {
         case 1: {
@@ -199,16 +209,48 @@ void MainWindow::readText()
                     "Строка замены имеет запрещенные символы", dialog);
             break;
         }
+        case 4: {
+            error = new QLabel("Строка замены не должна быть пуста", dialog);
+            break;
+        }
+        case 5: {
+            error = new QLabel("Строка маски не должна быть пуста", dialog);
+            break;
+        }
         }
         QVBoxLayout* layout = new QVBoxLayout(dialog);
         layout->addWidget(error);
         dialog->setLayout(layout);
         dialog->exec();
+    } catch (ExceptionMask exp) {
+        exception = true;
+        QMessageBox* dialog = new QMessageBox(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        QString errorString("Ошибка в ");
+        errorString += exp.mask;
+        if (exp.type == TypeError::Number) {
+            errorString += ": некорректное число";
+        } else {
+            errorString += ": некорректная маска";
+        }
+        if (!exp.expected.isEmpty()) {
+            errorString += ". Ожидается " + exp.expected;
+        }
+        /*  QVBoxLayout* layout = new QVBoxLayout(dialog);
+          QLabel* error = new QLabel(errorString, dialog);
+          layout->addWidget(error);
+          dialog->setLayout(layout);*/
+        dialog->setText(errorString);
+
+        dialog->exec();
     }
+    if (exception)
+        return;
 }
 void MainWindow::clickBrowse()
 {
     insertDialog = new QDialog(this);
+    insertDialog->setAttribute(Qt::WA_DeleteOnClose);
     insertDialog->setStyleSheet(
             "QPushButton {background-color: "
             "#EAEAEA; border: 2px outset "
@@ -248,7 +290,6 @@ void MainWindow::selectBrowse(QFileInfo* info)
 {
     mainWidget->addElement(info);
     insertDialog->close();
-    delete insertDialog;
 }
 
 void MainWindow::clickOk()
@@ -257,13 +298,11 @@ void MainWindow::clickOk()
         mainWidget->addElement(&info);
     }
     insertDialog->close();
-    delete insertDialog;
 }
 
 void MainWindow::clickCancel()
 {
     insertDialog->close();
-    delete insertDialog;
 }
 
 MainWindow::~MainWindow()

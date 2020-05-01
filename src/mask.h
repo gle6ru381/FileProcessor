@@ -25,9 +25,22 @@ private:
 
 public:
     void readName(); //Основныя функция прочтения имени
-    QString getTotalName() const; //Возвращает итоговое имя
-    uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
+    inline QString getTotalName() const; //Возвращает итоговое имя
+    inline uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
     uint getValue_C(uint index);
+};
+
+enum class TypeError { Semantic, Number };
+
+struct ExceptionMask {
+    TypeError const type;
+    QString const mask;
+    QString const expected;
+
+    ExceptionMask(
+            TypeError const type,
+            QString const mask,
+            QString const expected = "\0");
 };
 
 #endif // MASK_H
