@@ -183,6 +183,7 @@ void MainWindow::readText()
 
     } catch (int a) {
         QDialog* dialog = new QDialog(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
         QLabel* error;
         switch (a) {
         case 1: {
@@ -207,6 +208,7 @@ void MainWindow::readText()
         dialog->exec();
     } catch (ExceptionMask exp) {
         QDialog* dialog = new QDialog(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString errorString("Ошибка в ");
         errorString += exp.mask;
         if (!exp.expected.isEmpty()) {
@@ -222,6 +224,7 @@ void MainWindow::readText()
 void MainWindow::clickBrowse()
 {
     insertDialog = new QDialog(this);
+    insertDialog->setAttribute(Qt::WA_DeleteOnClose);
     insertDialog->setStyleSheet(
             "QPushButton {background-color: "
             "#EAEAEA; border: 2px outset "
@@ -261,7 +264,6 @@ void MainWindow::selectBrowse(QFileInfo* info)
 {
     mainWidget->addElement(info);
     insertDialog->close();
-    delete insertDialog;
 }
 
 void MainWindow::clickOk()
@@ -270,13 +272,11 @@ void MainWindow::clickOk()
         mainWidget->addElement(&info);
     }
     insertDialog->close();
-    delete insertDialog;
 }
 
 void MainWindow::clickCancel()
 {
     insertDialog->close();
-    delete insertDialog;
 }
 
 MainWindow::~MainWindow()
