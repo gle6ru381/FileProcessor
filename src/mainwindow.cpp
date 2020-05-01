@@ -166,20 +166,21 @@ void MainWindow::readText()
     QString strReplace = replace->text();
 
     try {
-        if (strMask.contains(QRegExp("\\S*[\\/\\\\:\\*\\?\\|\\<\\>]\\S*"))
-            || strFind.isEmpty()) {
+        if (strMask.contains(QRegExp("\\S*[\\/\\\\:\\*\\?\\|\\<\\>]\\S*"))) {
             throw 1;
         }
         if (strFind.contains(
-                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
-            || strFind.isEmpty()) {
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))) {
             throw 2;
         }
         if (strReplace.contains(
-                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
-            || strFind.isEmpty()) {
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))) {
             throw 3;
         }
+
+        Mask mask(strFind, strMask);
+        mask.readName();
+
     } catch (int a) {
         QDialog* dialog = new QDialog(this);
         QLabel* error;
@@ -201,6 +202,18 @@ void MainWindow::readText()
         }
         }
         QVBoxLayout* layout = new QVBoxLayout(dialog);
+        layout->addWidget(error);
+        dialog->setLayout(layout);
+        dialog->exec();
+    } catch (ExceptionMask exp) {
+        QDialog* dialog = new QDialog(this);
+        QString errorString("Ошибка в ");
+        errorString += exp.mask;
+        if (!exp.expected.isEmpty()) {
+            errorString += ". Ожидается " + exp.expected;
+        }
+        QVBoxLayout* layout = new QVBoxLayout(dialog);
+        QLabel* error = new QLabel(errorString, dialog);
         layout->addWidget(error);
         dialog->setLayout(layout);
         dialog->exec();
