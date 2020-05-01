@@ -177,12 +177,18 @@ void MainWindow::readText()
                     QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))) {
             throw 3;
         }
+        if (strReplace.isEmpty()) {
+            throw 4;
+        }
+        if (strMask.isEmpty()) {
+            throw 5;
+        }
 
         Mask mask(strFind, strMask);
         mask.readName();
 
     } catch (int a) {
-        QDialog* dialog = new QDialog(this);
+        QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QLabel* error;
         switch (a) {
@@ -201,23 +207,38 @@ void MainWindow::readText()
                     "Строка замены имеет запрещенные символы", dialog);
             break;
         }
+        case 4: {
+            error = new QLabel("Строка замены не должна быть пуста", dialog);
+            break;
+        }
+        case 5: {
+            error = new QLabel("Строка маски не должна быть пуста", dialog);
+            break;
+        }
         }
         QVBoxLayout* layout = new QVBoxLayout(dialog);
         layout->addWidget(error);
         dialog->setLayout(layout);
         dialog->exec();
     } catch (ExceptionMask exp) {
-        QDialog* dialog = new QDialog(this);
+        QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString errorString("Ошибка в ");
         errorString += exp.mask;
+        if (exp.type == TypeError::Number) {
+            errorString += ": некорректное число";
+        } else {
+            errorString += ": некорректная маска";
+        }
         if (!exp.expected.isEmpty()) {
             errorString += ". Ожидается " + exp.expected;
         }
-        QVBoxLayout* layout = new QVBoxLayout(dialog);
-        QLabel* error = new QLabel(errorString, dialog);
-        layout->addWidget(error);
-        dialog->setLayout(layout);
+        /*  QVBoxLayout* layout = new QVBoxLayout(dialog);
+          QLabel* error = new QLabel(errorString, dialog);
+          layout->addWidget(error);
+          dialog->setLayout(layout);*/
+        dialog->setText(errorString);
+
         dialog->exec();
     }
 }

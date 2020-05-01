@@ -15,9 +15,9 @@ static int fullMaskIndex = 0;
 void Mask::readName()
 {
     for (int nameIndex = 0; nameIndex < fullMask.size(); nameIndex++) {
-        fullMaskIndex = nameIndex;
         QString mask;
         if (fullMask.at(nameIndex) == '[') {
+            fullMaskIndex = nameIndex;
             while (fullMask.at(++nameIndex) != ']') {
                 mask += fullMask.at(nameIndex);
             }
@@ -65,6 +65,12 @@ void Mask::readMask(QString mask)
         } else {
             maskC(mask.remove(0, 1));
         }
+    }
+    default: {
+        throw ExceptionMask(
+                TypeError::Semantic,
+                "[?] начиная с " + QString::number(fullMaskIndex + 1),
+                "одна из масок.");
     }
     }
 }
