@@ -7,6 +7,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    exception = false;
     this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
     mask = new QLineEdit(this);
@@ -186,8 +187,9 @@ void MainWindow::readText()
 
         Mask mask(strFind, strMask);
         mask.readName();
-
+        exception = false;
     } catch (int a) {
+        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QLabel* error;
@@ -221,6 +223,7 @@ void MainWindow::readText()
         dialog->setLayout(layout);
         dialog->exec();
     } catch (ExceptionMask exp) {
+        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString errorString("Ошибка в ");
@@ -241,6 +244,8 @@ void MainWindow::readText()
 
         dialog->exec();
     }
+    if (exception)
+        return;
 }
 void MainWindow::clickBrowse()
 {

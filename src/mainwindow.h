@@ -41,6 +41,7 @@ private:
     MainWidget* mainWidget;
     PushInsert* pushInsert;
     QDialog* insertDialog;
+    bool exception;
 
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
