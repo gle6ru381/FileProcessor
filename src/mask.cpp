@@ -224,17 +224,9 @@ void Mask::maskN(QString mask)
                     QString("[Nx,y] начиная с ") + fullMaskIndex,
                     QString("не больше ") + name.size());
         }
-<<<<<<< HEAD
         for (int i = first; i < second; i++) {
             totalName += name.at(i);
         }
-
-=======
-
-        for (int i = first; i < second; i++) {
-            totalName += name.at(i);
-        }
->>>>>>> cdaa21d50b2de0b9be45fbe5442cadaebd5e2fc5
         return;
     } else {
         QString number;
@@ -400,19 +392,10 @@ void Mask::maskC(QString mask)
                     TypeError::Number,
                     QString("[Nn] начиная с ") + fullMaskIndex,
                     QString("шаг больше нуля"));
-<<<<<<< HEAD
         totalName += "/C" + QString::number(stepValue.size()) + "/";
         beginValue.push_back(number[0].toUInt());
         stepValue.push_back(totalStep);
         return;
-
-=======
-
-        totalName += "/C" + QString::number(stepValue.size()) + "/";
-        beginValue.push_back(number[0].toUInt());
-        stepValue.push_back(totalStep);
-        return;
->>>>>>> cdaa21d50b2de0b9be45fbe5442cadaebd5e2fc5
     } else {
         QString number;
         for (int i = 0; i < mask.size(); i++) {
