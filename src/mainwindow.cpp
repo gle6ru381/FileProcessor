@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QErrorMessage>
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
@@ -19,11 +20,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     rollback = new QPushButton("Откат", this);
     fandr->setObjectName("mainButton");
     rollback->setObjectName("mainButton");
+    connect(fandr, SIGNAL(clicked()), this, SLOT(readText()));
 
     layout->addWidget(mask, 0, 0);
     layout->addWidget(labMask, 1, 0, Qt::AlignTop);
-    layout->addWidget(find, 0, 2);
-    layout->addWidget(replace, 0, 1);
+    layout->addWidget(find, 0, 1);
+    layout->addWidget(replace, 0, 2);
 
     buttonMaskInit();
 
@@ -159,11 +161,51 @@ void MainWindow::initStyleSheet()
 }
 void MainWindow::readText()
 {
-QString strMask = mask->text();
-QString strFind = find->text();
-QString strReplace = replace->text();
-}
+    QString strMask = mask->text();
+    QString strFind = find->text();
+    QString strReplace = replace->text();
 
+    try {
+        if (strMask.contains(QRegExp("\\S*[\\/\\\\:\\*\\?\\|\\<\\>]\\S*"))
+            || strFind.isEmpty()) {
+            throw 1;
+        }
+        if (strFind.contains(
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
+            || strFind.isEmpty()) {
+            throw 2;
+        }
+        if (strReplace.contains(
+                    QRegExp("\\S*[\\/\\\\\\:\\*\\?\\|\\<\\>\\[\\]]\\S*"))
+            || strFind.isEmpty()) {
+            throw 3;
+        }
+    } catch (int a) {
+        QDialog* dialog = new QDialog(this);
+        QLabel* error;
+        switch (a) {
+        case 1: {
+            error = new QLabel(
+                    "Строка маски имеет запрещенные символы", dialog);
+            break;
+        }
+        case 2: {
+            error = new QLabel(
+                    "Строка поиска имеет запрещенные символы", dialog);
+            break;
+        }
+        case 3: {
+            error = new QLabel(
+                    "Строка замены имеет запрещенные символы", dialog);
+            break;
+        }
+        }
+        QVBoxLayout* layout = new QVBoxLayout(dialog);
+        layout->addWidget(error);
+        dialog->setLayout(layout);
+        dialog->exec();
+    }
+}
 void MainWindow::clickBrowse()
 {
     insertDialog = new QDialog(this);
@@ -171,7 +213,8 @@ void MainWindow::clickBrowse()
             "QPushButton {background-color: "
             "#EAEAEA; border: 2px outset "
             "#A1A1A1; padding: 5px;} "
-            "QPushButton:pressed {background-color: #E5E5E5; border: 1px ridge "
+            "QPushButton:pressed {background-color: #E5E5E5; border: 1px "
+            "ridge "
             "#A1A1A1;} "
             "PushInsert {border: 2px inset #A1A1A1; border-radius: 3px;}");
     pushInsert = new PushInsert(insertDialog);
