@@ -192,35 +192,30 @@ void MainWindow::readText()
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
-        QLabel* error;
+        QString error;
         switch (a) {
         case 1: {
-            error = new QLabel(
-                    "Строка маски имеет запрещенные символы", dialog);
+            error = QString("Строка маски имеет запрещенные символы");
             break;
         }
         case 2: {
-            error = new QLabel(
-                    "Строка поиска имеет запрещенные символы", dialog);
+            error = QString("Строка поиска имеет запрещенные символы");
             break;
         }
         case 3: {
-            error = new QLabel(
-                    "Строка замены имеет запрещенные символы", dialog);
+            error = QString("Строка замены имеет запрещенные символы");
             break;
         }
         case 4: {
-            error = new QLabel("Строка замены не должна быть пуста", dialog);
+            error = QString("Строка замены не должна быть пуста");
             break;
         }
         case 5: {
-            error = new QLabel("Строка маски не должна быть пуста", dialog);
+            error = QString("Строка маски не должна быть пуста");
             break;
         }
         }
-        QVBoxLayout* layout = new QVBoxLayout(dialog);
-        layout->addWidget(error);
-        dialog->setLayout(layout);
+        dialog->setText(error);
         dialog->exec();
     } catch (ExceptionMask exp) {
         exception = true;
@@ -236,10 +231,6 @@ void MainWindow::readText()
         if (!exp.expected.isEmpty()) {
             errorString += ". Ожидается " + exp.expected;
         }
-        /*  QVBoxLayout* layout = new QVBoxLayout(dialog);
-          QLabel* error = new QLabel(errorString, dialog);
-          layout->addWidget(error);
-          dialog->setLayout(layout);*/
         dialog->setText(errorString);
 
         dialog->exec();
