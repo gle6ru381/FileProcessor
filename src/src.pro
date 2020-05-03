@@ -25,7 +25,8 @@ SOURCES += \
     mainwidget.cpp \
     mainwindow.cpp \
     mask.cpp \
-    pushinsert.cpp
+    pushinsert.cpp \
+    replace.cpp
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

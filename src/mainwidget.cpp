@@ -98,3 +98,12 @@ void MainWidget::clearContents()
 {
     setRowCount(0);
 }
+
+QFileInfoList MainWidget::files()
+{
+    QFileInfoList files;
+    for (int i = 0; i < rowCount(); i++) {
+        files.push_back(item(i, 2)->text());
+    }
+    return files;
+}
