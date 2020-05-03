@@ -188,6 +188,7 @@ void MainWindow::readText()
         Mask mask(strFind, strMask);
         mask.readName();
         exception = false;
+        replacing(mask);
     } catch (int a) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
