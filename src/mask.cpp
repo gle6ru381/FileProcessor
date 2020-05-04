@@ -347,8 +347,15 @@ void Mask::maskYMD(QString mask)
 
             totalName += '/' + c + '/';
             findD = true;
-        } else {
+        } else if (c.isPunct()) {
             totalName += c;
+        } else {
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[YMD] начиная с ")
+                            + QString::number(fullMaskIndex + 1)
+                            + QString(". Неизвестный символ: ") + c,
+                    QString("Y, M или D"));
         }
     }
 }
