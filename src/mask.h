@@ -22,6 +22,7 @@ private:
     void maskYMD(QString& mask);
     void maskHMS(QString& mask);
     void maskC(QString& mask);
+    void checkBracketBalance();
 
 public:
     void readName(); //Основныя функция прочтения имени
@@ -34,14 +35,14 @@ public:
 enum class TypeError { Semantic, Number };
 
 struct ExceptionMask {
-    TypeError const type;
-    QString const mask;
-    QString const expected;
+    TypeError const& type;
+    QString const& mask;
+    QString const& expected;
 
     ExceptionMask(
-            TypeError const type,
-            QString const mask,
-            QString const expected = "\0");
+            TypeError const& type,
+            QString const& mask,
+            QString const& expected = "\0");
 };
 
 #endif // MASK_H

@@ -215,6 +215,13 @@ void MainWindow::readText()
             error = QString("Строка маски не должна быть пуста");
             break;
         }
+        case -1: {
+            error = QString("Открывающих скобок больше чем закрывающих");
+            break;
+        }
+        case -2: {
+            error = QString("Закрывающих скобок больше чем открывающих");
+        }
         }
         dialog->setText(error);
         dialog->exec();

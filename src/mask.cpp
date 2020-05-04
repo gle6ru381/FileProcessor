@@ -2,15 +2,32 @@
 
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
+    checkBracketBalance();
 }
 
 ExceptionMask::ExceptionMask(
-        TypeError const type, QString const mask, QString const expected)
+        TypeError const& type, QString const& mask, QString const& expected)
     : type(type), mask(mask), expected(expected)
 {
 }
 
 static int fullMaskIndex = 0;
+
+void Mask::checkBracketBalance()
+{
+    uint openBracket = 0;
+    uint closeBracket = 0;
+    for (QChar i : fullMask) {
+        if (i == '[')
+            openBracket++;
+        else if (i == ']') {
+            closeBracket++;
+        }
+    }
+    if (openBracket != closeBracket) {
+        openBracket > closeBracket ? throw -1 : throw -2;
+    }
+}
 
 void Mask::readName()
 {
