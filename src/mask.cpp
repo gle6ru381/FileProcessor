@@ -401,8 +401,15 @@ void Mask::maskHMS(QString mask)
 
             totalName += '/' + c + '/';
             findM = true;
-        } else {
+        } else if (c.isPunct()) {
             totalName += c;
+        } else {
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[hms] начиная с ")
+                            + QString::number(fullMaskIndex + 1)
+                            + QString(". Неизвестный символ: ") + c,
+                    QString("h, m или s"));
         }
     }
 }
