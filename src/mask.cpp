@@ -28,7 +28,7 @@ void Mask::readName()
     }
 }
 
-void Mask::readMask(QString mask)
+void Mask::readMask(QString& mask)
 {
     switch (mask.at(0).unicode()) {
     case 'N': {
@@ -77,7 +77,7 @@ void Mask::readMask(QString mask)
     }
 }
 
-void Mask::maskN(QString mask)
+void Mask::maskN(QString& mask)
 {
     if (mask.endsWith('-')) {
         QString totalNumber;
@@ -277,7 +277,7 @@ void Mask::maskN(QString mask)
     }
 }
 
-void Mask::maskE(QString mask)
+void Mask::maskE(QString& mask)
 {
     if (!mask.contains('-')) {
         throw ExceptionMask(
@@ -308,7 +308,7 @@ void Mask::maskE(QString mask)
     }
 }
 
-void Mask::maskYMD(QString mask)
+void Mask::maskYMD(QString& mask)
 {
     if (!mask.endsWith('Y') && !mask.endsWith('M') && !mask.endsWith('D'))
         throw ExceptionMask(
@@ -360,7 +360,7 @@ void Mask::maskYMD(QString mask)
     }
 }
 
-void Mask::maskHMS(QString mask)
+void Mask::maskHMS(QString& mask)
 {
     if (!mask.endsWith('h') && !mask.endsWith('s') && !mask.endsWith('m'))
         throw ExceptionMask(
@@ -414,7 +414,7 @@ void Mask::maskHMS(QString mask)
     }
 }
 
-void Mask::maskC(QString mask)
+void Mask::maskC(QString& mask)
 {
     if (!mask.at(0).isNumber())
         throw ExceptionMask(
