@@ -65,11 +65,13 @@ void Mask::readMask(QString mask)
         } else {
             maskC(mask.remove(0, 1));
         }
+        return;
     }
     default: {
         throw ExceptionMask(
                 TypeError::Semantic,
-                "[?] начиная с " + QString::number(fullMaskIndex + 1),
+                QString("[") + mask.at(0) + "] начиная с "
+                        + QString::number(fullMaskIndex + 1),
                 "одна из масок.");
     }
     }
