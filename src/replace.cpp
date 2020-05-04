@@ -45,7 +45,8 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
     };
-    for (QFileInfo& file : mainWidget->files()) {
+    for (int i = 0; i < mainWidget->rowCount(); i++) {
+        QFileInfo file(mainWidget->item(i, 2)->text());
         if (!file.exists()) {
             continue;
         }
@@ -76,7 +77,8 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
             }
         }
         totalName.replace(replacingArea, newName);
-        QFile(file.absoluteFilePath())
-                .rename(file.absolutePath() + '/' + totalName);
+        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QFile(file.absoluteFilePath()).rename(renaming);
+        mainWidget->changeTable(QFileInfo(renaming), i);
     }
 }

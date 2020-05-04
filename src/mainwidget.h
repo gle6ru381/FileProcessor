@@ -13,7 +13,7 @@ class MainWidget : public QTableWidget { //Класс основного вид�
 public:
     MainWidget(QWidget* parent = nullptr);
     void addElement(QFileInfo*); //Функция добавление файлов в виджет
-    QFileInfoList files();
+    void changeTable(QFileInfo const& file, int row);
 
 private:
     void dropEvent(QDropEvent*) override;
