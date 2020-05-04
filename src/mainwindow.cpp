@@ -132,7 +132,7 @@ void MainWindow::initStyleSheet()
     this->setStyleSheet(
             "QPushButton#maskButton {border-style: "
             "outset; border-width: 3px; border-color: #9C9C9C; padding: 10px; "
-            "background-color: #EEEEEE; border-radius: 1px;} "
+            "background-color: #EEEEEE; border-radius: 15px;} "
             "QPushButton#maskButton:pressed {border-style: ridge; "
             "border-width: 2px; background-color: #E3E3E3;} "
             "QPushButton#mainButton {background-color: qlineargradient(x1:0, "
@@ -215,12 +215,20 @@ void MainWindow::readText()
             error = QString("Строка маски не должна быть пуста");
             break;
         }
+        case -1: {
+            error = QString("Открывающих скобок больше чем закрывающих");
+            break;
+        }
+        case -2: {
+            error = QString("Закрывающих скобок больше чем открывающих");
+        }
         }
         dialog->setText(error);
         dialog->exec();
     } catch (ExceptionMask exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
+        dialog->setStyleSheet("align=center");
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString errorString("Ошибка в ");
         errorString += exp.mask;
