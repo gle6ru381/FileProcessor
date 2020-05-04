@@ -77,7 +77,7 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
             }
         }
         totalName.replace(replacingArea, newName);
-        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i);
     }
