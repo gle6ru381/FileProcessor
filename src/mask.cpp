@@ -466,6 +466,11 @@ uint Mask::Count_C() const
     return stepValue.size();
 }
 
+QString Mask::area() const
+{
+    return name;
+}
+
 uint Mask::getValue_C(uint index)
 {
     uint value = beginValue.at(index);

@@ -6,7 +6,7 @@ using Pair = std::pair<QString, int>;
 Pair convertE(QChar const* format, QString const extension)
 {
     QString numbers[2];
-    int size = 2;
+    int size = 3;
     short choise = 0;
     for (int i = 0; format[i] != '/'; i++) {
         if (format[i] == '-') {
@@ -17,10 +17,11 @@ Pair convertE(QChar const* format, QString const extension)
         numbers[choise].push_back(format[i]);
         size++;
     }
+    size++;
     QString total;
     int numberOne = numbers[0].toInt() - 1;
     int numberTwo = numbers[1].toInt() - 1;
-    while (numberOne < numberTwo) {
+    while (numberOne <= numberTwo) {
         total += extension[numberOne];
         numberOne++;
     }
@@ -40,7 +41,7 @@ Pair convertC(QChar const* format, Mask& mask)
     return std::make_pair(QString::number(n), size);
 }
 
-void MainWindow::replacing(Mask mask)
+void MainWindow::replacing(Mask& mask, QString replacingArea)
 {
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
@@ -50,6 +51,7 @@ void MainWindow::replacing(Mask mask)
             continue;
         }
         QString newName(mask.getTotalName());
+        QString totalName = file.fileName();
 
         newName.replace("/Y/", date(file, "yy"));
         newName.replace("/M/", date(file, "MM"));
@@ -63,7 +65,7 @@ void MainWindow::replacing(Mask mask)
             int ind = newName.indexOf('/');
             switch (newName[ind + 1].unicode()) {
             case 'E': {
-                auto pair = convertE(newName.data() + ind + 2, file.suffix());
+                auto pair = convertE(newName.data() + ind + 3, file.suffix());
                 newName.replace(ind, pair.second, pair.first);
                 break;
             }
@@ -74,5 +76,8 @@ void MainWindow::replacing(Mask mask)
             }
             }
         }
+        totalName.replace(replacingArea, newName);
+        QFile(file.absoluteFilePath())
+                .rename(file.absolutePath() + '/' + totalName);
     }
 }

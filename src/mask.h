@@ -27,6 +27,7 @@ public:
     void readName(); //Основныя функция прочтения имени
     QString getTotalName() const; //Возвращает итоговое имя
     uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
+    QString area() const;
     uint getValue_C(uint index);
 };
 
