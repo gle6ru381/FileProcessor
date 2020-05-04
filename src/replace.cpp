@@ -6,7 +6,7 @@ using Pair = std::pair<QString, int>;
 Pair convertE(QChar const* format, QString const extension)
 {
     QString numbers[2];
-    int size = 3;
+    int size = 4;
     short choise = 0;
     for (int i = 0; format[i] != '/'; i++) {
         if (format[i] == '-') {
@@ -17,7 +17,6 @@ Pair convertE(QChar const* format, QString const extension)
         numbers[choise].push_back(format[i]);
         size++;
     }
-    size++;
     QString total;
     int numberOne = numbers[0].toInt() - 1;
     int numberTwo = numbers[1].toInt() - 1;
@@ -31,7 +30,7 @@ Pair convertE(QChar const* format, QString const extension)
 Pair convertC(QChar const* format, Mask& mask)
 {
     QString index;
-    int size = 2;
+    int size = 3;
     for (int i = 0; format[i] != '/'; i++) {
         index += format[i];
         size++;
