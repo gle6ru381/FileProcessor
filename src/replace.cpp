@@ -52,7 +52,7 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
         QString newName(mask.getTotalName());
         QString totalName = file.fileName();
 
-        newName.replace("/Y/", date(file, "yy"));
+        newName.replace("/Y/", date(file, "yyyy"));
         newName.replace("/M/", date(file, "MM"));
         newName.replace("/D/", date(file, "dd"));
         newName.replace("/h/", date(file, "hh"));
