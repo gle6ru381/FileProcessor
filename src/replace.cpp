@@ -55,6 +55,8 @@ void MainWindow::reset(QFile& oldNames)
         mainWidget->changeTable(QFileInfo(newOldName), i);
     }
     oldNames.remove();
+    throw ExceptionReplacing(
+            "Один из файлов не существует, переименование прервано");
 }
 
 void MainWindow::replacing(Mask& mask, QString& replacingArea)

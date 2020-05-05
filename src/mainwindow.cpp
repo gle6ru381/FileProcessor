@@ -188,7 +188,7 @@ void MainWindow::readText()
         Mask mask(strReplace, strMask);
         mask.readName();
         exception = false;
-        replacing(mask, strFind, false);
+        replacing(mask, strFind);
     } catch (int& a) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
@@ -248,6 +248,13 @@ void MainWindow::readText()
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
+        dialog->exec();
+    } catch (ExceptionReplacing& exp) {
+        exception = true;
+        QMessageBox* dialog = new QMessageBox(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setText(exp.error);
+        dialog->setInformativeText("Все изменения отменены");
         dialog->exec();
     }
 
