@@ -188,14 +188,14 @@ void MainWindow::readText()
         }
         dialog->setText(error);
         dialog->exec();
-    } catch (ExceptionMask& exp) {
+    } catch (ExceptionMask exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setStyleSheet("align=center");
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString errorString("Ошибка в ");
         errorString += exp.mask;
-        if (exp.type == TypeError::Number) {
+        if (exp.type == ExceptionMask::TypeError::Number) {
             errorString += ": некорректное число";
         } else {
             errorString += ": некорректная маска";
@@ -206,13 +206,13 @@ void MainWindow::readText()
         dialog->setText(errorString);
 
         dialog->exec();
-    } catch (ExceptionFile& exp) {
+    } catch (ExceptionFile exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
         dialog->exec();
-    } catch (ExceptionReplacing& exp) {
+    } catch (ExceptionReplacing exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);

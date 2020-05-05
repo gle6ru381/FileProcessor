@@ -1,14 +1,10 @@
 #include "mask.h"
 
+using TypeError = ExceptionMask::TypeError;
+
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
     checkBracketBalance();
-}
-
-ExceptionMask::ExceptionMask(
-        TypeError const& type, QString const& mask, QString const& expected)
-    : type(type), mask(mask), expected(expected)
-{
 }
 
 static int fullMaskIndex = 0;
@@ -89,7 +85,7 @@ void Mask::readMask(QString& mask)
                 TypeError::Semantic,
                 QString("[") + mask.at(0) + "] начиная с "
                         + QString::number(fullMaskIndex + 1),
-                "одна из масок.");
+                QString("одна из масок."));
     }
     }
 }

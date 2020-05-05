@@ -1,7 +1,7 @@
 #ifndef MASK_H
 #define MASK_H
 
-#include <QObject>
+#include "exception.h"
 #include <QString>
 #include <QVector>
 
@@ -30,19 +30,6 @@ public:
     uint Count_C() const; //Возвращает число шаблонов [C] в общем шаблоне
     QString area() const;
     uint getValue_C(uint index);
-};
-
-enum class TypeError { Semantic, Number };
-
-struct ExceptionMask {
-    TypeError const& type;
-    QString const& mask;
-    QString const& expected;
-
-    ExceptionMask(
-            TypeError const& type,
-            QString const& mask,
-            QString const& expected = "\0");
 };
 
 #endif // MASK_H
