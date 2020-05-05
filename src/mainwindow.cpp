@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     fandr->setObjectName("mainButton");
     rollback->setObjectName("mainButton");
     connect(fandr, SIGNAL(clicked()), this, SLOT(readText()));
+    connect(rollback, SIGNAL(clicked()), this, SLOT(clickRollback()));
 
     layout->addWidget(mask, 0, 0);
     layout->addWidget(labMask, 1, 0, Qt::AlignTop);
@@ -151,7 +152,7 @@ void MainWindow::readText()
         mask.readName();
         exception = false;
         replacing(mask, strFind);
-    } catch (int& a) {
+    } catch (int a) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -270,6 +271,19 @@ void MainWindow::clickOk()
 void MainWindow::clickCancel()
 {
     insertDialog->close();
+}
+
+void MainWindow::clickRollback()
+{
+    QFile oldNames("~temp.log");
+    if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox* error = new QMessageBox(this);
+        error->setAttribute(Qt::WA_DeleteOnClose);
+        error->setText("Невозможно восстановить имена");
+        error->exec();
+        return;
+    }
+    reset(oldNames, false);
 }
 
 MainWindow::~MainWindow()

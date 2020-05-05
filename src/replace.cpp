@@ -41,7 +41,7 @@ Pair convertC(QChar const* format, Mask& mask)
     return std::make_pair(QString::number(n), size);
 }
 
-void MainWindow::reset(QFile& oldNames)
+void MainWindow::reset(QFile& oldNames, bool error)
 {
     QString name;
     for (int i = 0;; i++) {
@@ -55,8 +55,9 @@ void MainWindow::reset(QFile& oldNames)
         mainWidget->changeTable(QFileInfo(newOldName), i);
     }
     oldNames.remove();
-    throw ExceptionReplacing(
-            "Один из файлов не существует, переименование прервано");
+    if (error)
+        throw ExceptionReplacing(
+                "Один из файлов не существует, переименование прервано");
 }
 
 void MainWindow::replacing(Mask& mask, QString& replacingArea)
@@ -79,7 +80,7 @@ void MainWindow::replacing(Mask& mask, QString& replacingArea)
                 throw ExceptionFile(
                         "Невозможно прочитать файл для восстановления");
             }
-            reset(temp);
+            reset(temp, true);
             break;
         }
         QString newName(mask.getTotalName());
