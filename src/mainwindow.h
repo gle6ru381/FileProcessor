@@ -56,5 +56,6 @@ public slots:
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
+    void ExceptionChoise(QAbstractButton* button);
 };
 #endif // MAINWINDOW_H

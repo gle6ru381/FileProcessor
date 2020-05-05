@@ -189,7 +189,7 @@ void MainWindow::readText()
         mask.readName();
         exception = false;
         replacing(mask, strFind, false);
-    } catch (int a) {
+    } catch (int& a) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -225,7 +225,7 @@ void MainWindow::readText()
         }
         dialog->setText(error);
         dialog->exec();
-    } catch (ExceptionMask exp) {
+    } catch (ExceptionMask& exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setStyleSheet("align=center");
@@ -243,7 +243,14 @@ void MainWindow::readText()
         dialog->setText(errorString);
 
         dialog->exec();
+    } catch (ExceptionFile& exp) {
+        exception = true;
+        QMessageBox* dialog = new QMessageBox(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setText(exp.error);
+        dialog->exec();
     }
+
     if (exception)
         return;
 }

@@ -6,13 +6,13 @@
 class ExceptionFile {
 public:
     QString error;
-    ExceptionFile(QString& error);
+    ExceptionFile(QString&& error);
 };
 
 class ExceptionReplacing {
 public:
     QString error;
-    ExceptionReplacing(QString& error);
+    ExceptionReplacing(QString&& error);
 };
 
 #endif // EXCEPTION_H
