@@ -51,7 +51,7 @@ private:
     std::pair<QString, QString> insertStyleSheet();
 
     void replacing(Mask& mask, QString& oldName);
-    void reset(QFile&);
+    void reset(QFile& file, bool error);
 
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
@@ -59,5 +59,6 @@ public slots:
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
+    void clickRollback();
 };
 #endif // MAINWINDOW_H
