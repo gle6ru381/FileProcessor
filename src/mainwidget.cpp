@@ -101,13 +101,14 @@ void MainWidget::clearContents()
 
 void MainWidget::changeTable(QFileInfo const& file, int row)
 {
-    auto item = new QTableWidgetItem[3];
-    item[0].setText(file.fileName());
-    item[1].setText(file.lastModified().toString(Qt::ISODate));
-    item[2].setText(file.absoluteFilePath());
-    setItem(row, 0, &item[0]);
-    setItem(row, 1, &item[1]);
-    setItem(row, 2, &item[2]);
+    auto itemName = new QTableWidgetItem(file.fileName());
+    auto itemDate
+            = new QTableWidgetItem(file.lastModified().toString(Qt::ISODate));
+    auto itemPath = new QTableWidgetItem(file.absoluteFilePath());
+
+    setItem(row, 0, itemName);
+    setItem(row, 1, itemDate);
+    setItem(row, 2, itemPath);
 
     this->resizeColumnsToContents();
 }
