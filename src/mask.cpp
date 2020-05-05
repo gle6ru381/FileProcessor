@@ -2,15 +2,32 @@
 
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
+    checkBracketBalance();
 }
 
 ExceptionMask::ExceptionMask(
-        TypeError const type, QString const mask, QString const expected)
+        TypeError const& type, QString const& mask, QString const& expected)
     : type(type), mask(mask), expected(expected)
 {
 }
 
 static int fullMaskIndex = 0;
+
+void Mask::checkBracketBalance()
+{
+    uint openBracket = 0;
+    uint closeBracket = 0;
+    for (QChar i : fullMask) {
+        if (i == '[')
+            openBracket++;
+        else if (i == ']') {
+            closeBracket++;
+        }
+    }
+    if (openBracket != closeBracket) {
+        openBracket > closeBracket ? throw -1 : throw -2;
+    }
+}
 
 void Mask::readName()
 {
@@ -28,7 +45,7 @@ void Mask::readName()
     }
 }
 
-void Mask::readMask(QString mask)
+void Mask::readMask(QString& mask)
 {
     switch (mask.at(0).unicode()) {
     case 'N': {
@@ -65,17 +82,19 @@ void Mask::readMask(QString mask)
         } else {
             maskC(mask.remove(0, 1));
         }
+        return;
     }
     default: {
         throw ExceptionMask(
                 TypeError::Semantic,
-                "[?] начиная с " + QString::number(fullMaskIndex + 1),
+                QString("[") + mask.at(0) + "] начиная с "
+                        + QString::number(fullMaskIndex + 1),
                 "одна из масок.");
     }
     }
 }
 
-void Mask::maskN(QString mask)
+void Mask::maskN(QString& mask)
 {
     if (mask.endsWith('-')) {
         QString totalNumber;
@@ -275,7 +294,7 @@ void Mask::maskN(QString mask)
     }
 }
 
-void Mask::maskE(QString mask)
+void Mask::maskE(QString& mask)
 {
     if (!mask.contains('-')) {
         throw ExceptionMask(
@@ -306,7 +325,7 @@ void Mask::maskE(QString mask)
     }
 }
 
-void Mask::maskYMD(QString mask)
+void Mask::maskYMD(QString& mask)
 {
     if (!mask.endsWith('Y') && !mask.endsWith('M') && !mask.endsWith('D'))
         throw ExceptionMask(
@@ -345,13 +364,20 @@ void Mask::maskYMD(QString mask)
 
             totalName += '/' + c + '/';
             findD = true;
-        } else {
+        } else if (c.isPunct()) {
             totalName += c;
+        } else {
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[YMD] начиная с ")
+                            + QString::number(fullMaskIndex + 1)
+                            + QString(". Неизвестный символ: ") + c,
+                    QString("Y, M или D"));
         }
     }
 }
 
-void Mask::maskHMS(QString mask)
+void Mask::maskHMS(QString& mask)
 {
     if (!mask.endsWith('h') && !mask.endsWith('s') && !mask.endsWith('m'))
         throw ExceptionMask(
@@ -392,13 +418,20 @@ void Mask::maskHMS(QString mask)
 
             totalName += '/' + c + '/';
             findM = true;
-        } else {
+        } else if (c.isPunct()) {
             totalName += c;
+        } else {
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[hms] начиная с ")
+                            + QString::number(fullMaskIndex + 1)
+                            + QString(". Неизвестный символ: ") + c,
+                    QString("h, m или s"));
         }
     }
 }
 
-void Mask::maskC(QString mask)
+void Mask::maskC(QString& mask)
 {
     if (!mask.at(0).isNumber())
         throw ExceptionMask(
@@ -456,14 +489,19 @@ void Mask::maskC(QString mask)
     }
 }
 
-inline QString Mask::getTotalName() const
+QString Mask::getTotalName() const
 {
     return totalName;
 }
 
-inline uint Mask::Count_C() const
+uint Mask::Count_C() const
 {
     return stepValue.size();
+}
+
+QString Mask::area() const
+{
+    return name;
 }
 
 uint Mask::getValue_C(uint index)

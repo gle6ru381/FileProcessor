@@ -15,17 +15,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 HEADERS += \
+    exception.h \
     mainwidget.h \
     mainwindow.h \
     mask.h \
     pushinsert.h
 
 SOURCES += \
+    exception.cpp \
     main.cpp \
     mainwidget.cpp \
     mainwindow.cpp \
     mask.cpp \
-    pushinsert.cpp
+    pushinsert.cpp \
+    replace.cpp
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

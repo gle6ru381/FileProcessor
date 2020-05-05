@@ -3,6 +3,8 @@
 
 #include "pushinsert.h"
 #include <QDir>
+#include <QFile>
+#include <QFileInfoList>
 #include <QMimeData>
 #include <QTableWidget>
 
@@ -11,6 +13,7 @@ class MainWidget : public QTableWidget { //Класс основного вид�
 public:
     MainWidget(QWidget* parent = nullptr);
     void addElement(QFileInfo*); //Функция добавление файлов в виджет
+    void changeTable(QFileInfo const& file, int row);
 
 private:
     void dropEvent(QDropEvent*) override;
@@ -20,6 +23,8 @@ private:
     //Функции для добавления файлов перетаскиванием мыши
 public slots:
     void clearContents(); //Функция отчистки виджета
+signals:
+    void notOpen();
 };
 
 #endif // MAINWIDGET_H
