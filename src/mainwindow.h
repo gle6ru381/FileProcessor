@@ -47,6 +47,9 @@ private:
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
+    QString widgetStyleSheet();
+    std::pair<QString, QString> insertStyleSheet();
+
     void replacing(Mask& mask, QString& oldName);
     void reset(QFile&);
 
