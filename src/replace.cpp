@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QDateTime>
+#include <QTextStream>
 
 using Pair = std::pair<QString, int>;
 
@@ -40,18 +41,41 @@ Pair convertC(QChar const* format, Mask& mask)
     return std::make_pair(QString::number(n), size);
 }
 
+void MainWindow::reset(QFile& oldNames)
+{
+    QString name;
+    for (int i = 0;; i++) {
+        name = oldNames.readLine();
+        name.remove('\n');
+        if (name.isNull())
+            break;
+        QFileInfo file(mainWidget->item(i, 2)->text());
+        QString newOldName = file.absolutePath() + '/' + name;
+        QFile(file.absoluteFilePath()).rename(newOldName);
+        mainWidget->changeTable(QFileInfo(newOldName), i);
+    }
+    oldNames.remove();
+}
+
 void MainWindow::replacing(Mask& mask, QString replacingArea)
 {
+    QFile temp("temp.log");
+    temp.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream oldNames(&temp);
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
     };
     for (int i = 0; i < mainWidget->rowCount(); i++) {
         QFileInfo file(mainWidget->item(i, 2)->text());
         if (!file.exists()) {
-            continue;
+            temp.close();
+            temp.open(QIODevice::ReadOnly | QIODevice::Text);
+            reset(temp);
+            break;
         }
         QString newName(mask.getTotalName());
         QString totalName = file.fileName();
+        oldNames << totalName << '\n';
 
         newName.replace("/Y/", date(file, "yyyy"));
         newName.replace("/M/", date(file, "MM"));

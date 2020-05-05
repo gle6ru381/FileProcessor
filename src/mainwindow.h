@@ -47,6 +47,7 @@ private:
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
     void replacing(Mask& mask, QString oldName);
+    void reset(QFile&);
 
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
