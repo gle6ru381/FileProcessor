@@ -55,12 +55,18 @@ void MainWindow::reset(QFile& oldNames)
         mainWidget->changeTable(QFileInfo(newOldName), i);
     }
     oldNames.remove();
+    throw ExceptionReplacing(
+            "Один из файлов не существует, переименование прервано");
 }
 
-void MainWindow::replacing(Mask& mask, QString replacingArea)
+void MainWindow::replacing(Mask& mask, QString& replacingArea)
 {
-    QFile temp("temp.log");
-    temp.open(QIODevice::WriteOnly | QIODevice::Text);
+    QFile temp("~temp.log");
+    if (!temp.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        throw ExceptionFile(
+                "Невозможно создать файл для восстановления имен при "
+                "ошибке");
+    }
     QTextStream oldNames(&temp);
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
@@ -69,7 +75,10 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
         QFileInfo file(mainWidget->item(i, 2)->text());
         if (!file.exists()) {
             temp.close();
-            temp.open(QIODevice::ReadOnly | QIODevice::Text);
+            if (!temp.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                throw ExceptionFile(
+                        "Невозможно прочитать файл для восстановления");
+            }
             reset(temp);
             break;
         }

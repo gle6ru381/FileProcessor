@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "exception.h"
 #include "mainwidget.h"
 #include "mask.h"
 #include "pushinsert.h"
@@ -46,7 +47,7 @@ private:
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
-    void replacing(Mask& mask, QString oldName);
+    void replacing(Mask& mask, QString& oldName);
     void reset(QFile&);
 
 public slots:
