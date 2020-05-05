@@ -151,7 +151,7 @@ void MainWindow::readText()
         mask.readName();
         exception = false;
         replacing(mask, strFind);
-    } catch (int& a) {
+    } catch (int a) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
