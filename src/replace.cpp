@@ -57,10 +57,17 @@ void MainWindow::reset(QFile& oldNames)
     oldNames.remove();
 }
 
-void MainWindow::replacing(Mask& mask, QString replacingArea)
+void MainWindow::replacing(
+        Mask& mask, QString replacingArea, bool ignoreTempFile)
 {
-    QFile temp("temp.log");
-    temp.open(QIODevice::WriteOnly | QIODevice::Text);
+    QFile temp("~temp.log");
+    if (!ignoreTempFile) {
+        if (!temp.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            throw ExceptionFile(
+                    "Невозможно создать файл для восстановления имен при "
+                    "ошибке");
+        }
+    }
     QTextStream oldNames(&temp);
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
@@ -68,14 +75,20 @@ void MainWindow::replacing(Mask& mask, QString replacingArea)
     for (int i = 0; i < mainWidget->rowCount(); i++) {
         QFileInfo file(mainWidget->item(i, 2)->text());
         if (!file.exists()) {
+            if (ignoreTempFile)
+                break;
             temp.close();
-            temp.open(QIODevice::ReadOnly | QIODevice::Text);
+            if (!temp.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                throw ExceptionFile(
+                        "Невозможно прочитать файл для восстановления");
+            }
             reset(temp);
             break;
         }
         QString newName(mask.getTotalName());
         QString totalName = file.fileName();
-        oldNames << totalName << '\n';
+        if (!ignoreTempFile)
+            oldNames << totalName << '\n';
 
         newName.replace("/Y/", date(file, "yyyy"));
         newName.replace("/M/", date(file, "MM"));
