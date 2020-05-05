@@ -23,6 +23,8 @@ private:
     //Функции для добавления файлов перетаскиванием мыши
 public slots:
     void clearContents(); //Функция отчистки виджета
+signals:
+    void notOpen();
 };
 
 #endif // MAINWIDGET_H
