@@ -47,7 +47,7 @@ private:
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
-    void replacing(Mask& mask, QString oldName, bool ignoreTempFile);
+    void replacing(Mask& mask, QString& oldName);
     void reset(QFile&);
 
 public slots:
@@ -56,6 +56,5 @@ public slots:
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
-    void ExceptionChoise(QAbstractButton* button);
 };
 #endif // MAINWINDOW_H
