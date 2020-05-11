@@ -10,8 +10,53 @@ renameTest::~renameTest()
 {
 }
 
-void renameTest::test_case1()
+void renameTest::test_rename_data()
 {
+    QTest::addColumn<QString>("find");
+    QTest::addColumn<QString>("mask");
+    QTest::addColumn<QString>("replace");
+
+    QTest::newRow("data_1") << "abc"
+                            << "[N]-[N]"
+                            << "123";
+    QTest::newRow("data_2") << "76FA@#"
+                            << "[C1,2]-[N1-2]-[YMD]"
+                            << "abc";
+    QTest::newRow("data_3") << "my_name.ad"
+                            << "[mhs]-[YMD]+[N]"
+                            << "name";
+    QTest::newRow("data_4") << ";;Tras"
+                            << "[C1,5]and[C1,1]=[N]"
+                            << "123";
 }
 
-QTEST_APPLESS_MAIN(renameTest)
+void renameTest::test_rename()
+{
+    MainWindow* window = new MainWindow;
+    MainWidget* main = window->getMainWidget();
+    QFETCH(QString, find);
+    QFETCH(QString, mask);
+    QFETCH(QString, replace);
+    for (int i = 0; i <= 10; i++) {
+        QFile newFile(find + QString::number(i) + ".txt");
+        newFile.open(QIODevice::WriteOnly);
+        newFile.close();
+        QCOMPARE(newFile.exists(), true);
+        main->addElement(new QFileInfo(find + QString::number(i)));
+    }
+
+    QTest::keyClicks(window->findEdit(), find);
+    QTest::keyClicks(window->maskEdit(), mask);
+    QTest::keyClicks(window->replaceEdit(), replace);
+    QTest::mouseClick(window->getFandr(), Qt::LeftButton);
+
+    for (int i = 0; i <= 10; i++) {
+        QFile temp(replace + QString::number(i));
+        QCOMPARE(temp.exists(), true);
+        QFile temp2(find + QString::number(i));
+        QCOMPARE(temp.exists(), false);
+    }
+    delete window;
+}
+
+QTEST_MAIN(renameTest)

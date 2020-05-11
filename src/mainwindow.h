@@ -17,6 +17,11 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
+    QLineEdit* maskEdit() const;
+    QLineEdit* findEdit() const;
+    QLineEdit* replaceEdit() const;
+    MainWidget* getMainWidget() const;
+    QPushButton* getFandr() const;
 
 private:
     QLineEdit* mask;
