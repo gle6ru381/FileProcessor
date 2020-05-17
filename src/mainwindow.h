@@ -53,6 +53,9 @@ private:
     void replacing(Mask& mask, QString& oldName);
     void reset(QFile& file, bool error);
 
+private slots:
+    void mask_buttons();
+
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
     void selectBrowse(QFileInfo*); //Сюда передается selectIndex из PushInsert

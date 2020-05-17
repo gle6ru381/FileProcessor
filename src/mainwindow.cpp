@@ -68,6 +68,25 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     initStyleSheet();
     this->resize(800, 600);
+    connect(mN,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNxy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNnn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNpn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNxan,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mNnpy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mCn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mCna,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mYMD,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mHMS,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mE,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+    connect(mExy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
+
+}
+void MainWindow::mask_buttons()
+{
+    QPushButton *button = (QPushButton *)sender();
+    mask->setText(button->text());
 }
 
 void MainWindow::buttonMaskInit()
