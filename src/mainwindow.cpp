@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 void MainWindow::mask_buttons()
 {
     QPushButton *button = (QPushButton *)sender();
-    mask->setText(button->text());
+    mask->setText(mask->text() + button->text());
 }
 
 void MainWindow::buttonMaskInit()
