@@ -2,6 +2,8 @@
 #include <QDateTime>
 #include <QTextStream>
 
+// В этом файле содержатся функции переименования файлов
+
 using Pair = std::pair<QString, int>;
 
 Pair convertE(QChar const* format, QString const extension)

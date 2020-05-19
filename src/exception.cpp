@@ -1,5 +1,7 @@
 #include "exception.h"
 
+// Этот файл содержит реализацию классов исключений
+
 ExceptionFile::ExceptionFile(QString const& error) : error(error)
 {
 }

@@ -6,6 +6,10 @@
 #include <QPalette>
 #include <QRadioButton>
 
+/* Этот файл содержит реализацию основного окна приложения,
+   а также обработку событий всех кнопок.
+*/
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     reserveVector = new QVector<QString>;

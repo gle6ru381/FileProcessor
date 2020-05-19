@@ -1,6 +1,10 @@
 #include "pushinsert.h"
 #include <QHeaderView>
 
+/* В этом файле содержится реализация класса PushInsert
+Этот клас характеризует дерево системы, которое появляется при нажатии на кнопку
+"Обзор..." и позволяет добавлять файлы для переименования.
+*/
 PushInsert::PushInsert(QWidget* parent) : QTreeView(parent)
 {
     model = new QFileSystemModel(this);

@@ -1,5 +1,10 @@
 #include "mask.h"
 
+/* Этот файл содержит реализацию класса Mask который
+   реализовывает обработку масок, а также отслеживание и доступ к счетчику,
+   устанавливаемому маской [C]
+*/
+
 using TypeError = ExceptionMask::TypeError;
 
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
