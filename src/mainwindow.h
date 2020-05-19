@@ -5,7 +5,9 @@
 #include "mainwidget.h"
 #include "mask.h"
 #include "pushinsert.h"
+#include <QButtonGroup>
 #include <QDialog>
+#include <QGroupBox>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
@@ -19,6 +21,8 @@ public:
     ~MainWindow();
 
 private:
+    enum class MethodReserve { FILE, VECTOR, NONE };
+    MethodReserve choiseMethod;
     QLineEdit* mask;
     QLineEdit* find;
     QLineEdit* replace;
@@ -39,6 +43,7 @@ private:
     QPushButton* mExy;
     QPushButton* browse;
     QPushButton* clear;
+    QGroupBox* method;
     MainWidget* mainWidget;
     PushInsert* pushInsert;
     QDialog* insertDialog;
@@ -47,6 +52,7 @@ private:
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
+    void buttonGroupInit();
     QString widgetStyleSheet();
     std::pair<QString, QString> insertStyleSheet();
 
@@ -62,6 +68,7 @@ public slots:
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
+    void changeMethod(int id);
     void clickRollback();
 };
 #endif // MAINWINDOW_H
