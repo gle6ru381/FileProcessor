@@ -53,15 +53,13 @@ private:
     void replacing(Mask& mask, QString& oldName);
     void reset(QFile& file, bool error);
 
-private slots:
-    void mask_buttons();
-
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
     void selectBrowse(QFileInfo*); //Сюда передается selectIndex из PushInsert
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
+    void mask_buttons();
     void clickRollback();
 };
 #endif // MAINWINDOW_H
