@@ -8,6 +8,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    choiseMethod = MethodReserve::FILE;
     exception = false;
     this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
@@ -353,11 +354,12 @@ void MainWindow::buttonGroupInit()
     auto vector = new QRadioButton("память", this);
     auto none = new QRadioButton("не сохранять", this);
 
+    file->setChecked(true);
     group->addButton(file, 0);
     group->addButton(vector, 1);
     group->addButton(none, 2);
 
-    method = new QGroupBox(this);
+    method = new QGroupBox("Метод резервирования", this);
     auto layout = new QVBoxLayout(method);
     layout->addWidget(file);
     layout->addWidget(vector);

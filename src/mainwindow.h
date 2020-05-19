@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QVector>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -47,6 +48,7 @@ private:
     MainWidget* mainWidget;
     PushInsert* pushInsert;
     QDialog* insertDialog;
+    QVector<QString>* reserveVector;
     bool exception;
 
     void buttonMaskInit();

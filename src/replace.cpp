@@ -62,6 +62,9 @@ void MainWindow::reset(QFile& oldNames, bool error)
 
 void MainWindow::replacing(Mask& mask, QString& replacingArea)
 {
+    auto date = [](QFileInfo info, QString type) {
+        return info.lastModified().toString(type);
+    };
     QFile temp("~temp.log");
     if (!temp.open(QIODevice::WriteOnly | QIODevice::Text)) {
         throw ExceptionFile(
@@ -69,9 +72,6 @@ void MainWindow::replacing(Mask& mask, QString& replacingArea)
                 "ошибке");
     }
     QTextStream oldNames(&temp);
-    auto date = [](QFileInfo info, QString type) {
-        return info.lastModified().toString(type);
-    };
     for (int i = 0; i < mainWidget->rowCount(); i++) {
         QFileInfo file(mainWidget->item(i, 2)->text());
         if (!file.exists()) {
