@@ -57,8 +57,12 @@ private:
     void buttonGroupInit();
     QString widgetStyleSheet();
     std::pair<QString, QString> insertStyleSheet();
+    void renameProcess(QFile& reserve, Mask& mask, QString& oldName);
+    void renameProcess(QVector<QString>& reserve, Mask& mask, QString& oldName);
+    void renameProcess(Mask& mask, QString& oldName);
 
     void replacing(Mask& mask, QString& oldName);
+    void replacingTemplate(QString& name, Mask& mask, QFileInfo& file);
     void reset(QFile& file, bool error);
 
 private slots:

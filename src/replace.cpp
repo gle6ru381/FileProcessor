@@ -62,69 +62,116 @@ void MainWindow::reset(QFile& oldNames, bool error)
 
 void MainWindow::replacing(Mask& mask, QString& replacingArea)
 {
-    auto date = [](QFileInfo info, QString type) {
-        return info.lastModified().toString(type);
-    };
-    auto choiseFile = [date, this, replacingArea](Mask& mask) {
+    if (choiseMethod == MethodReserve::FILE) {
         QFile temp("~temp.log");
         if (!temp.open(QIODevice::WriteOnly | QIODevice::Text)) {
             throw ExceptionFile(
                     "Невозможно создать файл для восстановления имен при "
                     "ошибке");
         }
-        QTextStream oldNames(&temp);
-        for (int i = 0; i < mainWidget->rowCount(); i++) {
-            QFileInfo file(mainWidget->item(i, 2)->text());
-            if (!file.exists()) {
-                temp.close();
-                if (!temp.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                    throw ExceptionFile(
-                            "Невозможно прочитать файл для восстановления");
-                }
-                reset(temp, true);
-                break;
-            }
-            QString newName(mask.getTotalName());
-            QString totalName = file.fileName();
-            oldNames << totalName << '\n';
+        renameProcess(temp, mask, replacingArea);
+    } else if (choiseMethod == MethodReserve::VECTOR) {
+        if (!reserveVector->empty())
+            reserveVector->clear();
+        renameProcess(*reserveVector, mask, replacingArea);
+    } else {
+        renameProcess(mask, replacingArea);
+    }
+}
 
-            newName.replace("/Y/", date(file, "yyyy"));
-            newName.replace("/M/", date(file, "MM"));
-            newName.replace("/D/", date(file, "dd"));
-            newName.replace("/h/", date(file, "hh"));
-            newName.replace("/m/", date(file, "mm"));
-            newName.replace("/s/", date(file, "ss"));
-            newName.replace("/E/", file.suffix());
-
-            while (newName.contains('/')) {
-                int ind = newName.indexOf('/');
-                switch (newName[ind + 1].unicode()) {
-                case 'E': {
-                    auto pair
-                            = convertE(newName.data() + ind + 3, file.suffix());
-                    newName.replace(ind, pair.second, pair.first);
-                    break;
-                }
-                case 'C': {
-                    auto pair = convertC(newName.data() + ind + 2, mask);
-                    newName.replace(ind, pair.second, pair.first);
-                    break;
-                }
-                }
-            }
-            totalName.replace(replacingArea, newName);
-            QString renaming(file.absolutePath() + '/' + totalName);
-            QFile(file.absoluteFilePath()).rename(renaming);
-            mainWidget->changeTable(QFileInfo(renaming), i);
-        }
+void MainWindow::replacingTemplate(QString& name, Mask& mask, QFileInfo& file)
+{
+    auto date = [](QFileInfo info, QString type) {
+        return info.lastModified().toString(type);
     };
 
-    auto choiseVector = [date, this, replacingArea](Mask& mask) {
-        reserveVector = new (std::nothrow) QVector<QString>;
-        if (!reserveVector) {
-            throw ExceptionFile(
-                    "Невозможно создать файл для восстановления имен при "
-                    "ошибке");
+    name.replace("/Y/", date(file, "yyyy"));
+    name.replace("/M/", date(file, "MM"));
+    name.replace("/D/", date(file, "dd"));
+    name.replace("/h/", date(file, "hh"));
+    name.replace("/m/", date(file, "mm"));
+    name.replace("/s/", date(file, "ss"));
+    name.replace("/E/", file.suffix());
+
+    while (name.contains('/')) {
+        int ind = name.indexOf('/');
+        switch (name[ind + 1].unicode()) {
+        case 'E': {
+            auto pair = convertE(name.data() + ind + 3, file.suffix());
+            name.replace(ind, pair.second, pair.first);
+            break;
         }
-    };
+        case 'C': {
+            auto pair = convertC(name.data() + ind + 2, mask);
+            name.replace(ind, pair.second, pair.first);
+            break;
+        }
+        }
+    }
+}
+
+void MainWindow::renameProcess(
+        QFile& reserve, Mask& mask, QString& replacingArea)
+{
+    QTextStream oldNames(&reserve);
+    for (int i = 0; i < mainWidget->rowCount(); i++) {
+        QFileInfo file(mainWidget->item(i, 2)->text());
+        if (!file.exists()) {
+            reserve.close();
+            if (!reserve.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                throw ExceptionFile(
+                        "Невозможно прочитать файл для восстановления");
+            }
+            reset(reserve, true);
+            break;
+        }
+        QString newName(mask.getTotalName());
+        QString totalName = file.fileName();
+        oldNames << totalName << '\n';
+
+        replacingTemplate(newName, mask, file);
+
+        totalName.replace(replacingArea, newName);
+        QString renaming(file.absolutePath() + '/' + totalName);
+        QFile(file.absoluteFilePath()).rename(renaming);
+        mainWidget->changeTable(QFileInfo(renaming), i);
+    }
+}
+
+void MainWindow::renameProcess(
+        QVector<QString>& reserve, Mask& mask, QString& replacingArea)
+{
+    for (int i = 0; i < mainWidget->rowCount(); i++) {
+        QFileInfo file(mainWidget->item(i, 2)->text());
+        if (!file.exists()) {
+        }
+        QString newName(mask.getTotalName());
+        QString totalName = file.fileName();
+        reserve.push_back(totalName);
+
+        replacingTemplate(newName, mask, file);
+
+        totalName.replace(replacingArea, newName);
+        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QFile(file.absoluteFilePath()).rename(renaming);
+        mainWidget->changeTable(QFileInfo(renaming), i);
+    }
+}
+
+void MainWindow::renameProcess(Mask& mask, QString& replacingArea)
+{
+    for (int i = 0; i < mainWidget->rowCount(); i++) {
+        QFileInfo file(mainWidget->item(i, 2)->text());
+        if (!file.exists()) {
+        }
+        QString newName(mask.getTotalName());
+        QString totalName = file.fileName();
+
+        replacingTemplate(newName, mask, file);
+
+        totalName.replace(replacingArea, newName);
+        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QFile(file.absoluteFilePath()).rename(renaming);
+        mainWidget->changeTable(QFileInfo(renaming), i);
+    }
 }

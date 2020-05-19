@@ -8,6 +8,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    reserveVector = new QVector<QString>;
     choiseMethod = MethodReserve::FILE;
     exception = false;
     this->setAcceptDrops(true);
