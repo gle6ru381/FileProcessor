@@ -65,5 +65,8 @@ public slots:
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
     void clickRollback();
+
+signals:
+    void test_signal(QString const& totalName);
 };
 #endif // MAINWINDOW_H

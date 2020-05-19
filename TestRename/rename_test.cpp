@@ -15,13 +15,16 @@ void renameTest::test_rename_data()
     QTest::addColumn<QString>("find");
     QTest::addColumn<QString>("mask");
     QTest::addColumn<QString>("replace");
+    QTest::addColumn<QString>("expect");
 
     QTest::newRow("data_1") << "abc"
                             << "[N]-[N]"
-                            << "123";
+                            << "123"
+                            << "[123]-[123]";
     QTest::newRow("data_2") << "76FA@#"
-                            << "[C1,2]-[N1-2]-[YMD]"
-                            << "abc";
+                            << "[N1-2]-[YMD]"
+                            << "abc"
+                            << "";
     QTest::newRow("data_3") << "my_name.ad"
                             << "[mhs]-[YMD]+[N]"
                             << "name";
@@ -37,26 +40,32 @@ void renameTest::test_rename()
     QFETCH(QString, find);
     QFETCH(QString, mask);
     QFETCH(QString, replace);
+    beginName = find;
     for (int i = 0; i <= 10; i++) {
-        QFile newFile(find + QString::number(i) + ".txt");
-        newFile.open(QIODevice::WriteOnly);
+        QFile newFile(find + ".txt");
+        newFile.open(QIODevice::WriteOnly | QIODevice::Text);
         newFile.close();
         QCOMPARE(newFile.exists(), true);
-        main->addElement(new QFileInfo(find + QString::number(i)));
+        main->addElement(new QFileInfo(find + ".txt"));
     }
+
+    connect(window,
+            SIGNAL(test_signal(QString const&)),
+            this,
+            SLOT(compare_name(QString const&)));
 
     QTest::keyClicks(window->findEdit(), find);
     QTest::keyClicks(window->maskEdit(), mask);
     QTest::keyClicks(window->replaceEdit(), replace);
     QTest::mouseClick(window->getFandr(), Qt::LeftButton);
 
-    for (int i = 0; i <= 10; i++) {
-        QFile temp(replace + QString::number(i));
-        QCOMPARE(temp.exists(), true);
-        QFile temp2(find + QString::number(i));
-        QCOMPARE(temp.exists(), false);
-    }
     delete window;
+}
+
+void renameTest::compare_name(QString const& totalName)
+{
+    QString oldName(beginName + ".txt");
+    QCOMPARE(beginName, totalName + ".txt");
 }
 
 QTEST_MAIN(renameTest)

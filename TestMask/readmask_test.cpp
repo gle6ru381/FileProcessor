@@ -94,4 +94,4 @@ void ReadMask_Test::test_step_and_value()
     }
 }
 
-QTEST_APPLESS_MAIN(ReadMask_Test)
+QTEST_MAIN(ReadMask_Test)

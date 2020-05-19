@@ -185,6 +185,9 @@ void MainWindow::readText()
 
         Mask mask(strReplace, strMask);
         mask.readName();
+
+        emit test_signal(mask.getTotalName());
+
         exception = false;
         replacing(mask, strFind);
     } catch (int a) {
