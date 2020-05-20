@@ -352,7 +352,15 @@ void MainWindow::clickRollback()
         }
         reset(oldNames, false);
     } else if (choiseMethod == MethodReserve::VECTOR) {
-        reset(false);
+        try {
+            reset(false);
+        } catch (ExceptionReplacing except) {
+            QMessageBox* error = new QMessageBox(this);
+            error->setAttribute(Qt::WA_DeleteOnClose);
+            error->setText(except.error);
+            error->exec();
+            return;
+        }
     }
 }
 
@@ -402,6 +410,23 @@ void MainWindow::changeMethod(int id)
         break;
     }
     case 1: {
+        QFile file("~temp.log");
+        if (file.exists()) {
+            auto warning = new QMessageBox(this);
+            warning->setAttribute(Qt::WA_DeleteOnClose);
+            warning->setText(
+                    "При переключении метода резервирования старые данные "
+                    "будут потеряны и откат будет не доступен.");
+            warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            if (warning->exec() == QMessageBox::Ok) {
+                file.remove();
+            } else {
+                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(0);
+                button->setChecked(true);
+                break;
+            }
+        }
         choiseMethod = MethodReserve::VECTOR;
         break;
     }
