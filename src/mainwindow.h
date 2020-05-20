@@ -52,6 +52,7 @@ private:
     bool exception;
 
     void showError(QString const& errorText);
+    int showWarningChoise();
     // Функции инициализации
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);

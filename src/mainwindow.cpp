@@ -361,6 +361,8 @@ void MainWindow::clickRollback()
             showError(except.error);
             return;
         }
+    } else {
+        showError("Откат выключен");
     }
 }
 
@@ -386,18 +388,23 @@ void MainWindow::buttonGroupInit()
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(changeMethod(int)));
 }
 
+int MainWindow::showWarningChoise()
+{
+    auto warning = new QMessageBox(this);
+    warning->setAttribute(Qt::WA_DeleteOnClose);
+    warning->setText(
+            "При переключении метода резервирования старые данные "
+            "будут потеряны и откат будет не доступен.");
+    warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    return warning->exec();
+}
+
 void MainWindow::changeMethod(int id)
 {
     switch (id) {
     case 0: {
         if (!reserveVector->empty()) {
-            auto warning = new QMessageBox(this);
-            warning->setAttribute(Qt::WA_DeleteOnClose);
-            warning->setText(
-                    "При переключении метода резервирования старые данные "
-                    "будут потеряны и откат будет не доступен.");
-            warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            if (warning->exec() == QMessageBox::Ok) {
+            if (showWarningChoise() == QMessageBox::Ok) {
                 reserveVector->clear();
             } else {
                 QButtonGroup* group = static_cast<QButtonGroup*>(sender());
@@ -412,13 +419,7 @@ void MainWindow::changeMethod(int id)
     case 1: {
         QFile file("~temp.log");
         if (file.exists()) {
-            auto warning = new QMessageBox(this);
-            warning->setAttribute(Qt::WA_DeleteOnClose);
-            warning->setText(
-                    "При переключении метода резервирования старые данные "
-                    "будут потеряны и откат будет не доступен.");
-            warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            if (warning->exec() == QMessageBox::Ok) {
+            if (showWarningChoise() == QMessageBox::Ok) {
                 file.remove();
             } else {
                 QButtonGroup* group = static_cast<QButtonGroup*>(sender());
@@ -431,6 +432,26 @@ void MainWindow::changeMethod(int id)
         break;
     }
     case 2: {
+        QFile file("~temp.log");
+        if (!reserveVector->empty()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                reserveVector->clear();
+            } else {
+                auto group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(1);
+                button->setChecked(true);
+                break;
+            }
+        } else if (file.exists()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                file.remove();
+            } else {
+                auto group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(0);
+                button->setChecked(true);
+                break;
+            }
+        }
         choiseMethod = MethodReserve::NONE;
         break;
     }
