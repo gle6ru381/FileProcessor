@@ -65,6 +65,7 @@ private:
     void replacingTemplate(QString& name, Mask& mask, QFileInfo& file);
     //Функции отката
     void reset(QFile& file, bool error);
+    void reset(bool error);
 
 private slots:
     void mask_buttons(); // Функция действия для кнопок масок
