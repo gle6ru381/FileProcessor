@@ -280,7 +280,10 @@ void MainWindow::readText()
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
-        dialog->setInformativeText("Все изменения отменены");
+        if (choiseMethod != MethodReserve::NONE)
+            dialog->setInformativeText("Все изменения отменены");
+        else
+            dialog->setInformativeText("Часть файлов переименована");
         dialog->exec();
     }
 
@@ -368,16 +371,20 @@ void MainWindow::clickRollback()
 
 void MainWindow::buttonGroupInit()
 {
-    auto group = new QButtonGroup(this);
+    auto group = new QButtonGroup(this); // Создаем объект для логики кнопок
     auto file = new QRadioButton("файл", this);
+    file->setToolTip("Данные для отката сохраняются в файле");
     auto vector = new QRadioButton("память", this);
+    vector->setToolTip("Дланные для отката сохраняются в оперативной памяти");
     auto none = new QRadioButton("не сохранять", this);
+    none->setToolTip("Отключение резервирования данных");
 
     file->setChecked(true);
     group->addButton(file, 0);
     group->addButton(vector, 1);
     group->addButton(none, 2);
 
+    // Создаем объект для графического отображения кнопок
     method = new QGroupBox("Метод резервирования", this);
     auto layout = new QVBoxLayout(method);
     layout->addWidget(file);

@@ -51,6 +51,7 @@ private:
     QVector<QString>* reserveVector; // Массив резервированных данных
     bool exception;
 
+    // Функци вывода ошибок и предупреждений
     void showError(QString const& errorText);
     int showWarningChoise();
     // Функции инициализации
