@@ -15,8 +15,8 @@ public:
     QFileInfoList selectedInfo() const;
 
 public slots:
-    void selectInfo(const QModelIndex& index);
     //Вызывается при двойном нажатии на файл и вызывает selectIndex
+    void selectInfo(const QModelIndex& index);
 signals:
     void selectIndex(QFileInfo*); //Передает информацию о файле
 };

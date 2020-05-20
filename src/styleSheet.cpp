@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-
+// В этом файле содержатся функции для установки стиля виджетов
 void MainWindow::initStyleSheet()
 {
     this->setStyleSheet(

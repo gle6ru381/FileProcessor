@@ -4,9 +4,16 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPalette>
+#include <QRadioButton>
+
+/* Этот файл содержит реализацию основного окна приложения,
+   а также обработку событий всех кнопок.
+*/
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+    reserveVector = new QVector<QString>;
+    choiseMethod = MethodReserve::FILE;
     exception = false;
     this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
@@ -30,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     layout->addWidget(replace, 0, 2);
 
     buttonMaskInit();
+    buttonGroupInit();
 
     mainWidget = new MainWidget(this);
 
@@ -52,12 +60,16 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     buttonLayoutInit(maskLayout, maskFrame);
 
+    QVBoxLayout* leftLayout = new QVBoxLayout(this);
+    leftLayout->addWidget(method);
+    leftLayout->addWidget(maskFrame);
+
     browse = new QPushButton("Обзор...", this);
     browse->setObjectName("mainButton");
     connect(browse, SIGNAL(clicked()), this, SLOT(clickBrowse()));
 
     layout->addWidget(browse, 6, 2);
-    layout->addWidget(maskFrame, 3, 0);
+    layout->addLayout(leftLayout, 3, 0);
 
     layout->addLayout(fandrLayout, 1, 2, Qt::AlignTop);
     layout->addLayout(rollbackLayout, 1, 1, Qt::AlignTop);
@@ -68,24 +80,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     initStyleSheet();
     this->resize(800, 600);
-    connect(mN,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNxy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNnn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNpn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNxan,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mNnpy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mCn,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mCna,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mYMD,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mHMS,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mE,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-    connect(mExy,SIGNAL(clicked()),this,SLOT(mask_buttons()));
-
 }
 void MainWindow::mask_buttons()
 {
-    QPushButton *button = (QPushButton *)sender();
+    QPushButton* button = (QPushButton*)sender();
     mask->setText(mask->text() + button->text());
 }
 
@@ -119,19 +117,55 @@ void MainWindow::buttonMaskInit()
     mExy->setObjectName("maskButton");
     clear = new QPushButton("Очистить", this);
     clear->setObjectName("mainButton");
-    mN->setToolTip ("Полное имя файла без расширения.");
-    mNn->setToolTip ("Возвращает n-ый символ из имени файла. Пример: [N1] возвращает первый символ имени файла.");
-    mNxy->setToolTip ("Возвращает часть имени файла от x и до y. Пример: [N2-5] возвращает строку, начиная со второго символа и заканчивая пятым.");
-    mNnn->setToolTip ("Возвращает все символы из имени начиная с n-ого. Пример: [N2-] возвращает имя файла, начиная со второго символа.");
-    mNpn->setToolTip ("Возвращает n-ый символ с конца строки. Пример: [N-5] возвращает 5 символ с конца.");
-    mNxan->setToolTip ("Возвращает n символов из имени файла начиная с x. Пример: [N2,6] возвращает 6 символов начиная со второго.");
-    mNnpy->setToolTip ("Возвращает строку, начиная с n-ого символа и заканчивая y c конца строки. Пример: [N2--5] возвращает часть имени начиная вторым символом и заканчивая пятым с конца.");
-    mCn->setToolTip ("Возвращает увеличивающееся число или букву начиная с n с шагом 1.");
-    mCna->setToolTip ("Возвращает увеличивающееся число или букву начиная с n с шагом a.");
-    mYMD->setToolTip ("Возвращает строку, содержащую дату последнего изменения файла в формате год, месяц, день.");
-    mHMS->setToolTip ("Возвращает строку, содержащую дату последнего изменения файла в формате час, минуты, секунды.");
-    mE->setToolTip ("Возвращает расширение файла.");
-    mExy->setToolTip ("Возвращает расширение файла от x до y.");
+    mN->setToolTip("Полное имя файла без расширения.");
+    mNn->setToolTip(
+            "Возвращает n-ый символ из имени файла. Пример: [N1] возвращает "
+            "первый символ имени файла.");
+    mNxy->setToolTip(
+            "Возвращает часть имени файла от x и до y. Пример: [N2-5] "
+            "возвращает строку, начиная со второго символа и заканчивая "
+            "пятым.");
+    mNnn->setToolTip(
+            "Возвращает все символы из имени начиная с n-ого. Пример: [N2-] "
+            "возвращает имя файла, начиная со второго символа.");
+    mNpn->setToolTip(
+            "Возвращает n-ый символ с конца строки. Пример: [N-5] возвращает 5 "
+            "символ с конца.");
+    mNxan->setToolTip(
+            "Возвращает n символов из имени файла начиная с x. Пример: [N2,6] "
+            "возвращает 6 символов начиная со второго.");
+    mNnpy->setToolTip(
+            "Возвращает строку, начиная с n-ого символа и заканчивая y c конца "
+            "строки. Пример: [N2--5] возвращает часть имени начиная вторым "
+            "символом и заканчивая пятым с конца.");
+    mCn->setToolTip(
+            "Возвращает увеличивающееся число или букву начиная с n с шагом "
+            "1.");
+    mCna->setToolTip(
+            "Возвращает увеличивающееся число или букву начиная с n с шагом "
+            "a.");
+    mYMD->setToolTip(
+            "Возвращает строку, содержащую дату последнего изменения файла в "
+            "формате год, месяц, день.");
+    mHMS->setToolTip(
+            "Возвращает строку, содержащую дату последнего изменения файла в "
+            "формате час, минуты, секунды.");
+    mE->setToolTip("Возвращает расширение файла.");
+    mExy->setToolTip("Возвращает расширение файла от x до y.");
+
+    connect(mN, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNn, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNxy, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNnn, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNpn, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNxan, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mNnpy, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mCn, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mCna, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mYMD, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mHMS, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mE, SIGNAL(clicked()), this, SLOT(mask_buttons()));
+    connect(mExy, SIGNAL(clicked()), this, SLOT(mask_buttons()));
 }
 
 void MainWindow::buttonLayoutInit(QVBoxLayout* maskLayout, QFrame* maskFrame)
@@ -240,16 +274,16 @@ void MainWindow::readText()
         dialog->exec();
     } catch (ExceptionFile exp) {
         exception = true;
-        QMessageBox* dialog = new QMessageBox(this);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->setText(exp.error);
-        dialog->exec();
+        showError(exp.error);
     } catch (ExceptionReplacing exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
-        dialog->setInformativeText("Все изменения отменены");
+        if (choiseMethod != MethodReserve::NONE)
+            dialog->setInformativeText("Все изменения отменены");
+        else
+            dialog->setInformativeText("Часть файлов переименована");
         dialog->exec();
     }
 
@@ -305,19 +339,133 @@ void MainWindow::clickCancel()
     insertDialog->close();
 }
 
+void MainWindow::showError(QString const& errorText)
+{
+    QMessageBox* error = new QMessageBox(this);
+    error->setAttribute(Qt::WA_DeleteOnClose);
+    error->setText(errorText);
+    error->exec();
+    return;
+}
+
 void MainWindow::clickRollback()
 {
-    QFile oldNames("~temp.log");
-    if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox* error = new QMessageBox(this);
-        error->setAttribute(Qt::WA_DeleteOnClose);
-        error->setText("Невозможно восстановить имена");
-        error->exec();
-        return;
+    if (choiseMethod == MethodReserve::FILE) {
+        QFile oldNames("~temp.log");
+        if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            showError("Не удалось открыть файл для восстановления");
+            return;
+        }
+        reset(oldNames, false);
+    } else if (choiseMethod == MethodReserve::VECTOR) {
+        try {
+            reset(false);
+        } catch (ExceptionReplacing except) {
+            showError(except.error);
+            return;
+        }
+    } else {
+        showError("Откат выключен");
     }
-    reset(oldNames, false);
+}
+
+void MainWindow::buttonGroupInit()
+{
+    auto group = new QButtonGroup(this); // Создаем объект для логики кнопок
+    auto file = new QRadioButton("файл", this);
+    file->setToolTip("Данные для отката сохраняются в файле");
+    auto vector = new QRadioButton("память", this);
+    vector->setToolTip("Дланные для отката сохраняются в оперативной памяти");
+    auto none = new QRadioButton("не сохранять", this);
+    none->setToolTip("Отключение резервирования данных");
+
+    file->setChecked(true);
+    group->addButton(file, 0);
+    group->addButton(vector, 1);
+    group->addButton(none, 2);
+
+    // Создаем объект для графического отображения кнопок
+    method = new QGroupBox("Метод резервирования", this);
+    auto layout = new QVBoxLayout(method);
+    layout->addWidget(file);
+    layout->addWidget(vector);
+    layout->addWidget(none);
+    method->setLayout(layout);
+
+    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(changeMethod(int)));
+}
+
+int MainWindow::showWarningChoise()
+{
+    auto warning = new QMessageBox(this);
+    warning->setAttribute(Qt::WA_DeleteOnClose);
+    warning->setText(
+            "При переключении метода резервирования старые данные "
+            "будут потеряны и откат будет не доступен.");
+    warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    return warning->exec();
+}
+
+void MainWindow::changeMethod(int id)
+{
+    switch (id) {
+    case 0: {
+        if (!reserveVector->empty()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                reserveVector->clear();
+            } else {
+                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
+                QAbstractButton* button = group->button(1);
+                button->setChecked(true);
+                break;
+            }
+        }
+        choiseMethod = MethodReserve::FILE;
+        break;
+    }
+    case 1: {
+        QFile file("~temp.log");
+        if (file.exists()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                file.remove();
+            } else {
+                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(0);
+                button->setChecked(true);
+                break;
+            }
+        }
+        choiseMethod = MethodReserve::VECTOR;
+        break;
+    }
+    case 2: {
+        QFile file("~temp.log");
+        if (!reserveVector->empty()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                reserveVector->clear();
+            } else {
+                auto group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(1);
+                button->setChecked(true);
+                break;
+            }
+        } else if (file.exists()) {
+            if (showWarningChoise() == QMessageBox::Ok) {
+                file.remove();
+            } else {
+                auto group = static_cast<QButtonGroup*>(sender());
+                auto button = group->button(0);
+                button->setChecked(true);
+                break;
+            }
+        }
+        choiseMethod = MethodReserve::NONE;
+        break;
+    }
+    }
 }
 
 MainWindow::~MainWindow()
 {
+    QFile("~temp.log").remove();
 }

@@ -5,11 +5,14 @@
 #include "mainwidget.h"
 #include "mask.h"
 #include "pushinsert.h"
+#include <QButtonGroup>
 #include <QDialog>
+#include <QGroupBox>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QVector>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -19,10 +22,12 @@ public:
     ~MainWindow();
 
 private:
-    QLineEdit* mask;
-    QLineEdit* find;
-    QLineEdit* replace;
-    QPushButton* fandr;
+    enum class MethodReserve { FILE, VECTOR, NONE };
+    MethodReserve choiseMethod; //Метож резервирования
+    QLineEdit* mask;            // Строка маски
+    QLineEdit* find;            // Строка найти
+    QLineEdit* replace;         // строка заменить
+    QPushButton* fandr; // Переменные кнопок с масками
     QPushButton* rollback;
     QPushButton* mN;
     QPushButton* mNn;
@@ -39,22 +44,35 @@ private:
     QPushButton* mExy;
     QPushButton* browse;
     QPushButton* clear;
-    MainWidget* mainWidget;
-    PushInsert* pushInsert;
-    QDialog* insertDialog;
+    QGroupBox* method; // 3 кнопки с методами резервирования
+    MainWidget* mainWidget; // Виджет с кнопками для переименования
+    PushInsert* pushInsert; // Дерево системы
+    QDialog* insertDialog;  // Окно "Обзор..."
+    QVector<QString>* reserveVector; // Массив резервированных данных
     bool exception;
 
+    // Функци вывода ошибок и предупреждений
+    void showError(QString const& errorText);
+    int showWarningChoise();
+    // Функции инициализации
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);
     void initStyleSheet();
+    void buttonGroupInit();
     QString widgetStyleSheet();
     std::pair<QString, QString> insertStyleSheet();
-
+    //Функции переименования
+    void renameProcess(QFile& reserve, Mask& mask, QString& oldName);
+    void renameProcess(QVector<QString>& reserve, Mask& mask, QString& oldName);
+    void renameProcess(Mask& mask, QString& oldName);
     void replacing(Mask& mask, QString& oldName);
+    void replacingTemplate(QString& name, Mask& mask, QFileInfo& file);
+    //Функции отката
     void reset(QFile& file, bool error);
+    void reset(bool error);
 
 private slots:
-    void mask_buttons();
+    void mask_buttons(); // Функция действия для кнопок масок
 
 public slots:
     void clickBrowse(); //Нажатие на "Обзор..."
@@ -62,6 +80,7 @@ public slots:
     void clickOk();                //Нажатие на Ок в доп.окне
     void clickCancel(); //Нажатие на Отмена в доп.окне
     void readText(); // Считывание текста из полей "Маска", "Найти" и "Заменить"
-    void clickRollback();
+    void changeMethod(int id); // Переключение метода резервирования
+    void clickRollback(); // Нажатие на откат
 };
 #endif // MAINWINDOW_H

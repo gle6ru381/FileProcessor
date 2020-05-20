@@ -13,14 +13,14 @@ class MainWidget : public QTableWidget { //Класс основного вид�
 public:
     MainWidget(QWidget* parent = nullptr);
     void addElement(QFileInfo*); //Функция добавление файлов в виджет
-    void changeTable(QFileInfo const& file, int row);
+    void changeTable(QFileInfo const& file, int row); //Изменение строки таблицы
 
 private:
+    //Функции для добавления файлов перетаскиванием мыши
     void dropEvent(QDropEvent*) override;
     void dragLeaveEvent(QDragLeaveEvent*) override;
     void dragEnterEvent(QDragEnterEvent*) override;
     void dragMoveEvent(QDragMoveEvent*) override;
-    //Функции для добавления файлов перетаскиванием мыши
 public slots:
     void clearContents(); //Функция отчистки виджета
 signals:

@@ -4,6 +4,11 @@
 #include <QFileInfo>
 #include <QHeaderView>
 
+/* Этот файл содержит реализацию класса MainWidget, который
+   характеризует окно со всеми файлами для переименования и
+   функции для добавления, изменения и извлечения файлов из таблицы
+*/
+
 MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
 {
     QStringList headers;
