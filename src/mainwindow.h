@@ -50,6 +50,8 @@ private:
     QDialog* insertDialog;  // Окно "Обзор..."
     QVector<QString>* reserveVector; // Массив резервированных данных
     bool exception;
+
+    void showError(QString const& errorText);
     // Функции инициализации
     void buttonMaskInit();
     void buttonLayoutInit(QVBoxLayout* layout, QFrame* frame);

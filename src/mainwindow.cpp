@@ -274,10 +274,7 @@ void MainWindow::readText()
         dialog->exec();
     } catch (ExceptionFile exp) {
         exception = true;
-        QMessageBox* dialog = new QMessageBox(this);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->setText(exp.error);
-        dialog->exec();
+        showError(exp.error);
     } catch (ExceptionReplacing exp) {
         exception = true;
         QMessageBox* dialog = new QMessageBox(this);
@@ -339,15 +336,21 @@ void MainWindow::clickCancel()
     insertDialog->close();
 }
 
+void MainWindow::showError(QString const& errorText)
+{
+    QMessageBox* error = new QMessageBox(this);
+    error->setAttribute(Qt::WA_DeleteOnClose);
+    error->setText(errorText);
+    error->exec();
+    return;
+}
+
 void MainWindow::clickRollback()
 {
     if (choiseMethod == MethodReserve::FILE) {
         QFile oldNames("~temp.log");
         if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QMessageBox* error = new QMessageBox(this);
-            error->setAttribute(Qt::WA_DeleteOnClose);
-            error->setText("Невозможно восстановить имена");
-            error->exec();
+            showError("Не удалось открыть файл для восстановления");
             return;
         }
         reset(oldNames, false);
@@ -355,10 +358,7 @@ void MainWindow::clickRollback()
         try {
             reset(false);
         } catch (ExceptionReplacing except) {
-            QMessageBox* error = new QMessageBox(this);
-            error->setAttribute(Qt::WA_DeleteOnClose);
-            error->setText(except.error);
-            error->exec();
+            showError(except.error);
             return;
         }
     }
