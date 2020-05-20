@@ -341,15 +341,19 @@ void MainWindow::clickCancel()
 
 void MainWindow::clickRollback()
 {
-    QFile oldNames("~temp.log");
-    if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox* error = new QMessageBox(this);
-        error->setAttribute(Qt::WA_DeleteOnClose);
-        error->setText("Невозможно восстановить имена");
-        error->exec();
-        return;
+    if (choiseMethod == MethodReserve::FILE) {
+        QFile oldNames("~temp.log");
+        if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox* error = new QMessageBox(this);
+            error->setAttribute(Qt::WA_DeleteOnClose);
+            error->setText("Невозможно восстановить имена");
+            error->exec();
+            return;
+        }
+        reset(oldNames, false);
+    } else if (choiseMethod == MethodReserve::VECTOR) {
+        reset(false);
     }
-    reset(oldNames, false);
 }
 
 void MainWindow::buttonGroupInit()
@@ -378,6 +382,22 @@ void MainWindow::changeMethod(int id)
 {
     switch (id) {
     case 0: {
+        if (!reserveVector->empty()) {
+            auto warning = new QMessageBox(this);
+            warning->setAttribute(Qt::WA_DeleteOnClose);
+            warning->setText(
+                    "При переключении метода резервирования старые данные "
+                    "будут потеряны и откат будет не доступен.");
+            warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            if (warning->exec() == QMessageBox::Ok) {
+                reserveVector->clear();
+            } else {
+                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
+                QAbstractButton* button = group->button(1);
+                button->setChecked(true);
+                break;
+            }
+        }
         choiseMethod = MethodReserve::FILE;
         break;
     }

@@ -182,7 +182,7 @@ void MainWindow::renameProcess(
 
         // Замена имени
         totalName.replace(replacingArea, newName);
-        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
     }
@@ -204,7 +204,7 @@ void MainWindow::renameProcess(Mask& mask, QString& replacingArea)
 
         // Замена имени
         totalName.replace(replacingArea, newName);
-        QString renaming(file.absoluteFilePath() + '/' + totalName);
+        QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
     }
