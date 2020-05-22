@@ -216,9 +216,6 @@ void MainWindow::readText()
         if (strMask.isEmpty()) {
             throw 5;
         }
-        if (strFind.isEmpty()) {
-            throw 6;
-        }
 
         Mask mask(strReplace, strMask);
         mask.readName();
@@ -248,10 +245,6 @@ void MainWindow::readText()
         }
         case 5: {
             error = QString("Строка маски не должна быть пуста");
-            break;
-        }
-        case 6: {
-            error = QString("Строка \"найти\" не должна быть пуста");
             break;
         }
         case -1: {

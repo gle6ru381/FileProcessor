@@ -1,5 +1,8 @@
 #include "mainwindow.h"
+#include <QApplication>
 #include <QDateTime>
+#include <QProgressBar>
+#include <QProgressDialog>
 #include <QTextStream>
 
 // В этом файле содержатся функции переименования файлов
@@ -139,7 +142,19 @@ void MainWindow::renameProcess(
         QFile& reserve, Mask& mask, QString& replacingArea)
 {
     QTextStream oldNames(&reserve); // Создаем поток для записи в файл
+    QProgressDialog progressDialog(this);
+    progressDialog.setRange(0, mainWidget->rowCount());
+    progressDialog.setLabelText("Переименование...");
+    QProgressBar bar;
+    bar.setFormat("%v из %m");
+    bar.setRange(0, mainWidget->rowCount());
+    progressDialog.setBar(&bar);
+    progressDialog.setCancelButton(nullptr);
+    progressDialog.show();
+
     for (int i = 0; i < mainWidget->rowCount(); i++) {
+        progressDialog.setValue(i);
+        QApplication::processEvents();
         QFileInfo file(mainWidget->item(i, 2)->text()); // Создаем объект файла
         if (!file.exists()) { // Если файл не существует
             reserve.close();  // Открываем файл для чтения
@@ -163,6 +178,7 @@ void MainWindow::renameProcess(
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
     }
+    progressDialog.deleteLater();
 }
 
 void MainWindow::renameProcess(
