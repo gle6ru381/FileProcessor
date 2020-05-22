@@ -69,7 +69,7 @@ void MainWindow::reset(QFile& oldNames, bool error)
 {
     QString name;
     for (int i = 0;; i++) {
-        name = oldNames.readLine(); // Читаем строку из файла
+        name = QString::fromUtf8(oldNames.readLine()); // Читаем строку из файла
         name.remove('\n');
         if (name.isNull()) // Проверка на NULL
             break;
@@ -142,6 +142,7 @@ void MainWindow::renameProcess(
         QFile& reserve, Mask& mask, QString& replacingArea)
 {
     QTextStream oldNames(&reserve); // Создаем поток для записи в файл
+    oldNames.setCodec("UTF-8");
     QProgressDialog progressDialog(this);
     progressDialog.setRange(0, mainWidget->rowCount());
     progressDialog.setLabelText("Переименование...");
