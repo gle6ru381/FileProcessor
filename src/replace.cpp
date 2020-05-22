@@ -184,7 +184,19 @@ void MainWindow::renameProcess(
 void MainWindow::renameProcess(
         QVector<QString>& reserve, Mask& mask, QString& replacingArea)
 {
+    QProgressDialog progressDialog(this);
+    progressDialog.setRange(0, mainWidget->rowCount());
+    progressDialog.setLabelText("Переименование...");
+    QProgressBar bar;
+    bar.setFormat("%v из %m");
+    bar.setRange(0, mainWidget->rowCount());
+    progressDialog.setBar(&bar);
+    progressDialog.setCancelButton(nullptr);
+    progressDialog.show();
+
     for (int i = 0; i < mainWidget->rowCount(); i++) {
+        progressDialog.setValue(i);
+        QApplication::processEvents();
         QFileInfo file(mainWidget->item(i, 2)->text()); // Объект файла
         if (!file.exists()) { // Если файл не существует
             reset(true);      // Вызываем откат с ошибкой
@@ -206,7 +218,19 @@ void MainWindow::renameProcess(
 
 void MainWindow::renameProcess(Mask& mask, QString& replacingArea)
 {
+    QProgressDialog progressDialog(this);
+    progressDialog.setRange(0, mainWidget->rowCount());
+    progressDialog.setLabelText("Переименование...");
+    QProgressBar bar;
+    bar.setFormat("%v из %m");
+    bar.setRange(0, mainWidget->rowCount());
+    progressDialog.setBar(&bar);
+    progressDialog.setCancelButton(nullptr);
+    progressDialog.show();
+
     for (int i = 0; i < mainWidget->rowCount(); i++) {
+        progressDialog.setValue(i);
+        QApplication::processEvents();
         QFileInfo file(mainWidget->item(i, 2)->text()); // Объект байла
         if (!file.exists()) { // Если файл не существоет бросаем исключение
             throw ExceptionReplacing(
