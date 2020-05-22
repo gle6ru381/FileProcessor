@@ -216,7 +216,9 @@ void MainWindow::readText()
         if (strMask.isEmpty()) {
             throw 5;
         }
-
+        if (strFind.isEmpty()) {
+            throw 6;
+        }
         Mask mask(strReplace, strMask);
         mask.readName();
         exception = false;
@@ -228,23 +230,27 @@ void MainWindow::readText()
         QString error;
         switch (a) {
         case 1: {
-            error = QString("Строка маски имеет запрещенные символы");
+            error = QString("Строка \"маска\" имеет запрещенные символы");
             break;
         }
         case 2: {
-            error = QString("Строка поиска имеет запрещенные символы");
+            error = QString("Строка \"найти\" имеет запрещенные символы");
             break;
         }
         case 3: {
-            error = QString("Строка замены имеет запрещенные символы");
+            error = QString("Строка \"заменить\" имеет запрещенные символы");
             break;
         }
         case 4: {
-            error = QString("Строка замены не должна быть пуста");
+            error = QString("Строка \"заменить\" не должна быть пуста");
             break;
         }
         case 5: {
-            error = QString("Строка маски не должна быть пуста");
+            error = QString("Строка \"маска\" не должна быть пуста");
+            break;
+        }
+        case 6: {
+            error = QString("Строка \"найти\" не должна быть пуста");
             break;
         }
         case -1: {
