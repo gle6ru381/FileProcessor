@@ -1,9 +1,12 @@
 #include "mainwindow.h"
+#include <QApplication>
 #include <QErrorMessage>
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
 #include <QPalette>
+#include <QProgressBar>
+#include <QProgressDialog>
 #include <QRadioButton>
 
 /* Этот файл содержит реализацию основного окна приложения,
@@ -213,6 +216,9 @@ void MainWindow::readText()
         if (strMask.isEmpty()) {
             throw 5;
         }
+        if (strFind.isEmpty()) {
+            throw 6;
+        }
 
         Mask mask(strReplace, strMask);
         mask.readName();
@@ -242,6 +248,10 @@ void MainWindow::readText()
         }
         case 5: {
             error = QString("Строка маски не должна быть пуста");
+            break;
+        }
+        case 6: {
+            error = QString("Строка \"найти\" не должна быть пуста");
             break;
         }
         case -1: {
@@ -328,8 +338,22 @@ void MainWindow::selectBrowse(QFileInfo* info)
 
 void MainWindow::clickOk()
 {
+    auto list = pushInsert->selectedInfo();
+    QProgressDialog progressDialog(this);
+    progressDialog.setLabelText("Добавление файлов...");
+    QProgressBar bar;
+    bar.setFormat("%v из %m");
+    bar.setRange(0, mainWidget->rowCount());
+    progressDialog.setBar(&bar);
+    progressDialog.setCancelButton(nullptr);
+    progressDialog.show();
+    int i = 0;
+
     for (auto info : pushInsert->selectedInfo()) {
+        progressDialog.setValue(i);
+        QApplication::processEvents();
         mainWidget->addElement(&info);
+        i++;
     }
     insertDialog->close();
 }
