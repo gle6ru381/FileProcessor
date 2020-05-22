@@ -38,6 +38,7 @@ void PushInsert::selectInfo(const QModelIndex& index)
 QFileInfoList PushInsert::selectedInfo() const
 {
     auto indexes = selectedIndexes();
+    indexes.pop_back();
     QFileInfoList infoList;
     for (auto index : indexes) {
         infoList.push_back(model->filePath(index));
