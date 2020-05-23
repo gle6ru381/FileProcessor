@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     reserveVector = new QVector<QString>;
     choiseMethod = MethodReserve::FILE;
-    exception = false;
     this->setAcceptDrops(true);
     QGridLayout* layout = new QGridLayout(this);
     mask = new QLineEdit(this);
@@ -221,10 +220,8 @@ void MainWindow::readText()
         }
         Mask mask(strReplace, strMask);
         mask.readName();
-        exception = false;
         replacing(mask, strFind);
     } catch (int a) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString error;
@@ -264,7 +261,6 @@ void MainWindow::readText()
         dialog->setText(error);
         dialog->exec();
     } catch (ExceptionMask exp) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setStyleSheet("align=center");
         dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -282,10 +278,8 @@ void MainWindow::readText()
 
         dialog->exec();
     } catch (ExceptionFile exp) {
-        exception = true;
         showError(exp.error);
     } catch (ExceptionReplacing exp) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
@@ -295,70 +289,6 @@ void MainWindow::readText()
             dialog->setInformativeText("Часть файлов переименована");
         dialog->exec();
     }
-
-    if (exception)
-        return;
-}
-void MainWindow::clickBrowse()
-{
-    insertDialog = new QDialog(this);
-    insertDialog->setAttribute(Qt::WA_DeleteOnClose);
-    auto style = insertStyleSheet();
-    insertDialog->setStyleSheet(style.first);
-    pushInsert = new PushInsert(insertDialog);
-    QVBoxLayout* layout = new QVBoxLayout(insertDialog);
-    QHBoxLayout* buttonLayout = new QHBoxLayout(insertDialog);
-    QPushButton* ok = new QPushButton("Ок", insertDialog);
-    QPushButton* cancel = new QPushButton("Отмена", insertDialog);
-
-    pushInsert->setStyleSheet(style.second);
-
-    connect(pushInsert,
-            SIGNAL(selectIndex(QFileInfo*)),
-            this,
-            SLOT(selectBrowse(QFileInfo*)));
-    connect(ok, SIGNAL(clicked()), this, SLOT(clickOk()));
-    connect(cancel, SIGNAL(clicked()), this, SLOT(clickCancel()));
-
-    layout->addWidget(pushInsert);
-    buttonLayout->addWidget(ok);
-    buttonLayout->addWidget(cancel);
-    layout->addLayout(buttonLayout);
-    insertDialog->setLayout(layout);
-    insertDialog->resize(400, 500);
-    insertDialog->exec();
-}
-
-void MainWindow::selectBrowse(QFileInfo* info)
-{
-    mainWidget->addElement(info);
-    insertDialog->close();
-}
-
-void MainWindow::clickOk()
-{
-    QProgressDialog progressDialog(this);
-    progressDialog.setLabelText("Добавление файлов...");
-    QProgressBar bar;
-    bar.setFormat("%v из %m");
-    bar.setRange(0, mainWidget->rowCount());
-    progressDialog.setBar(&bar);
-    progressDialog.setCancelButton(nullptr);
-    progressDialog.show();
-    int i = 0;
-
-    for (auto info : pushInsert->selectedInfo()) {
-        progressDialog.setValue(i);
-        QApplication::processEvents();
-        mainWidget->addElement(&info);
-        i++;
-    }
-    insertDialog->close();
-}
-
-void MainWindow::clickCancel()
-{
-    insertDialog->close();
 }
 
 void MainWindow::showError(QString const& errorText)
@@ -368,27 +298,6 @@ void MainWindow::showError(QString const& errorText)
     error->setText(errorText);
     error->exec();
     return;
-}
-
-void MainWindow::clickRollback()
-{
-    if (choiseMethod == MethodReserve::FILE) {
-        QFile oldNames("~temp.log");
-        if (!oldNames.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            showError("Не удалось открыть файл для восстановления");
-            return;
-        }
-        reset(oldNames, false);
-    } else if (choiseMethod == MethodReserve::VECTOR) {
-        try {
-            reset(false);
-        } catch (ExceptionReplacing except) {
-            showError(except.error);
-            return;
-        }
-    } else {
-        showError("Откат выключен");
-    }
 }
 
 void MainWindow::buttonGroupInit()
@@ -426,65 +335,6 @@ int MainWindow::showWarningChoise()
             "будут потеряны и откат будет не доступен.");
     warning->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     return warning->exec();
-}
-
-void MainWindow::changeMethod(int id)
-{
-    switch (id) {
-    case 0: {
-        if (!reserveVector->empty()) {
-            if (showWarningChoise() == QMessageBox::Ok) {
-                reserveVector->clear();
-            } else {
-                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
-                QAbstractButton* button = group->button(1);
-                button->setChecked(true);
-                break;
-            }
-        }
-        choiseMethod = MethodReserve::FILE;
-        break;
-    }
-    case 1: {
-        QFile file("~temp.log");
-        if (file.exists()) {
-            if (showWarningChoise() == QMessageBox::Ok) {
-                file.remove();
-            } else {
-                QButtonGroup* group = static_cast<QButtonGroup*>(sender());
-                auto button = group->button(0);
-                button->setChecked(true);
-                break;
-            }
-        }
-        choiseMethod = MethodReserve::VECTOR;
-        break;
-    }
-    case 2: {
-        QFile file("~temp.log");
-        if (!reserveVector->empty()) {
-            if (showWarningChoise() == QMessageBox::Ok) {
-                reserveVector->clear();
-            } else {
-                auto group = static_cast<QButtonGroup*>(sender());
-                auto button = group->button(1);
-                button->setChecked(true);
-                break;
-            }
-        } else if (file.exists()) {
-            if (showWarningChoise() == QMessageBox::Ok) {
-                file.remove();
-            } else {
-                auto group = static_cast<QButtonGroup*>(sender());
-                auto button = group->button(0);
-                button->setChecked(true);
-                break;
-            }
-        }
-        choiseMethod = MethodReserve::NONE;
-        break;
-    }
-    }
 }
 
 MainWindow::~MainWindow()

@@ -49,7 +49,6 @@ private:
     PushInsert* pushInsert; // Дерево системы
     QDialog* insertDialog;  // Окно "Обзор..."
     QVector<QString>* reserveVector; // Массив резервированных данных
-    bool exception;
 
     // Функци вывода ошибок и предупреждений
     void showError(QString const& errorText);

@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QFileInfoList>
 #include <QMimeData>
+#include <QProgressBar>
+#include <QProgressDialog>
 #include <QTableWidget>
 
 class MainWidget : public QTableWidget { //Класс основного виджета с файлами

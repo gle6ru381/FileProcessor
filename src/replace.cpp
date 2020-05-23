@@ -33,20 +33,6 @@ Pair convertE(QChar const* format, QString const extension)
     return std::make_pair(total, size);
 }
 
-Pair convertC(QChar const* format, Mask& mask)
-{
-    QString index;                           // Индекс счетчика
-    int size = 3;                            // Длина маски
-    for (int i = 0; format[i] != '/'; i++) { // считывание индекса
-        index += format[i];
-        size++;
-    }
-    uint n = mask.getValue_C(
-            index.toInt()); // Получение данных счетчика по индексу
-
-    return std::make_pair(QString::number(n), size);
-}
-
 void MainWindow::reset(bool error) // Откат для Vector
 {
     if (reserveVector->empty()) { // Если вектор пуст, бросаем исключение
@@ -108,19 +94,25 @@ void MainWindow::replacing(Mask& mask, QString& replacingArea)
 
 void MainWindow::replacingTemplate(QString& name, Mask& mask, QFileInfo& file)
 {
+    using UsingsMasks = Mask::UsingsMasks;
     // лямбда для получения даты файла
     auto date = [](QFileInfo info, QString type) {
         return info.lastModified().toString(type);
     };
 
     // Заменяем все шаблоны, разные для разных файлов
-    name.replace("/Y/", date(file, "yyyy"));
-    name.replace("/M/", date(file, "MM"));
-    name.replace("/D/", date(file, "dd"));
-    name.replace("/h/", date(file, "hh"));
-    name.replace("/m/", date(file, "mm"));
-    name.replace("/s/", date(file, "ss"));
-    name.replace("/E/", file.suffix());
+    if ((uint64_t)mask.masks & (uint64_t)UsingsMasks::Mask_YMD) {
+        name.replace("/Y/", date(file, "yyyy"));
+        name.replace("/M/", date(file, "MM"));
+        name.replace("/D/", date(file, "dd"));
+    }
+    if ((uint64_t)mask.masks & (uint64_t)UsingsMasks::Mask_hms) {
+        name.replace("/h/", date(file, "hh"));
+        name.replace("/m/", date(file, "mm"));
+        name.replace("/s/", date(file, "ss"));
+    }
+    if ((uint64_t)mask.masks & (uint64_t)UsingsMasks::Mask_E)
+        name.replace("/E/", file.suffix());
 
     // Заменяем расширение типа [E*] и счетчик
     while (name.contains('/')) {
@@ -132,12 +124,14 @@ void MainWindow::replacingTemplate(QString& name, Mask& mask, QFileInfo& file)
             break;
         }
         case 'C': {
-            auto pair = convertC(name.data() + ind + 2, mask);
-            name.replace(ind, pair.second, pair.first);
+            uint index = mask.pop_index();
+            uint size = QString::number(index).size() + 3;
+            name.replace(ind, size, QString::number(mask.getValue_C(index)));
             break;
         }
         }
     }
+    mask.nulling_index();
 }
 
 void MainWindow::renameProcess(

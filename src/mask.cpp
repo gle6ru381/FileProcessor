@@ -9,6 +9,8 @@ using TypeError = ExceptionMask::TypeError;
 
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
+    index_C = 0;
+    masks = UsingsMasks::None;
     checkBracketBalance();
 }
 
@@ -57,6 +59,8 @@ void Mask::readMask(QString& mask)
         return;
     }
     case 'E': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_E);
         if (mask.size() == 1)
             totalName += "/E/";
         else
@@ -66,16 +70,22 @@ void Mask::readMask(QString& mask)
     case 'Y':
     case 'M':
     case 'D': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_YMD);
         maskYMD(mask);
         return;
     }
     case 'h':
     case 'm':
     case 's': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_hms);
         maskHMS(mask);
         return;
     }
     case 'C': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_C);
         if (mask.size() == 1) {
             totalName += "/C" + QString::number(stepValue.size()) + "/";
             stepValue.push_back(1);
@@ -95,181 +105,206 @@ void Mask::readMask(QString& mask)
     }
 }
 
-void Mask::maskN(QString& mask)
+void Mask::maskNnd(QString& mask)
 {
-    if (mask.endsWith('-')) {
-        QString totalNumber;
-        for (int i = 0; i < mask.size() - 1; i++) {
-            if (mask.at(i).isNumber())
-                totalNumber += mask.at(i);
-            else
-                throw ExceptionMask(
-                        TypeError::Semantic,
-                        QString("[Nn-] начиная с ")
-                                + QString::number(fullMaskIndex + 1));
-        }
-        int Index = totalNumber.toInt() - 1;
-        if (Index > name.size())
+    QString totalNumber;
+    for (int i = 0; i < mask.size() - 1; i++) {
+        if (mask.at(i).isNumber())
+            totalNumber += mask.at(i);
+        else
             throw ExceptionMask(
-                    TypeError::Number,
+                    TypeError::Semantic,
                     QString("[Nn-] начиная с ")
-                            + QString::number(fullMaskIndex + 1),
-                    QString("не больше ") + QString::number(name.size()));
-        for (int i = Index; i < name.size(); i++) {
-            totalName += name.at(i);
-        }
-        return;
-    } else if (mask.at(0) == '-') {
-        QString totalNumber;
-        for (int i = 1; i < mask.size(); i++) {
-            if (mask.at(i).isNumber())
-                totalNumber += mask.at(i);
-            else
-                throw ExceptionMask(
-                        TypeError::Semantic,
-                        QString("[N-n] начиная с ")
-                                + QString::number(fullMaskIndex + 1));
-            ;
-        }
-        int diff = totalNumber.toInt() + 1;
-        if (diff - 1 > name.size())
+                            + QString::number(fullMaskIndex + 1));
+    }
+    int Index = totalNumber.toInt() - 1;
+    if (Index > name.size())
+        throw ExceptionMask(
+                TypeError::Number,
+                QString("[Nn-] начиная с ")
+                        + QString::number(fullMaskIndex + 1),
+                QString("не больше ") + QString::number(name.size()));
+    for (int i = Index; i < name.size(); i++) {
+        totalName += name.at(i);
+    }
+}
+
+void Mask::maskNdn(QString& mask)
+{
+    QString totalNumber;
+    for (int i = 1; i < mask.size(); i++) {
+        if (mask.at(i).isNumber())
+            totalNumber += mask.at(i);
+        else
             throw ExceptionMask(
-                    TypeError::Number,
+                    TypeError::Semantic,
                     QString("[N-n] начиная с ")
-                            + QString::number(fullMaskIndex + 1),
-                    QString("не больше ") + QString::number(name.size()));
-        for (int i = name.size() - diff; i < name.size(); i++) {
-            totalName += name.at(i);
-        }
-        return;
-    } else if (mask.contains("--")) {
-        QString number[2];
-        int choise = 0;
-        for (int i = 0; i < mask.size(); i++) {
-            QChar c = mask.at(i);
-            if (c.isNumber()) {
-                number[choise] += c;
-            } else if (c == '-') {
-                if (choise == 1)
-                    throw ExceptionMask(
-                            TypeError::Semantic,
-                            QString("[Nn--y] начиная с ")
-                                    + QString::number(fullMaskIndex + 1));
-                if (mask.at(++i) == '-') {
-                    i++;
-                    choise = 1;
-                } else {
-                    throw ExceptionMask(
-                            TypeError::Semantic,
-                            QString("[Nn--y] начиная с ")
-                                    + QString::number(fullMaskIndex + 1));
-                }
-            } else
+                            + QString::number(fullMaskIndex + 1));
+        ;
+    }
+    int diff = totalNumber.toInt() + 1;
+    if (diff - 1 > name.size())
+        throw ExceptionMask(
+                TypeError::Number,
+                QString("[N-n] начиная с ")
+                        + QString::number(fullMaskIndex + 1),
+                QString("не больше ") + QString::number(name.size()));
+    for (int i = name.size() - diff; i < name.size(); i++) {
+        totalName += name.at(i);
+    }
+}
+
+void Mask::maskNnddy(QString& mask)
+{
+    QString number[2];
+    int choise = 0;
+    for (int i = 0; i < mask.size(); i++) {
+        QChar c = mask.at(i);
+        if (c.isNumber()) {
+            number[choise] += c;
+        } else if (c == '-') {
+            if (choise == 1)
                 throw ExceptionMask(
                         TypeError::Semantic,
                         QString("[Nn--y] начиная с ")
                                 + QString::number(fullMaskIndex + 1));
-        }
-        if (number[0].isEmpty() || number[1].isEmpty()) {
-            throw ExceptionMask(
-                    TypeError::Semantic,
-                    QString("[Nn--y] начиная с ")
-                            + QString::number(fullMaskIndex + 1));
-        }
-        int first = number[0].toInt() - 1;
-        int second = number[1].toInt();
-        if (first > name.size() || second > name.size())
-            throw ExceptionMask(
-                    TypeError::Number,
-                    QString("[Nn--y] начиная с ")
-                            + QString::number(fullMaskIndex + 1),
-                    QString("не больше ") + QString::number(name.size()));
-        int diff = name.size() - second;
-
-        for (int i = first; i < diff; i++) {
-            totalName += name.at(i);
-        }
-        return;
-    } else if (mask.contains('-')) {
-        QString number[2];
-        int choise = 0;
-        for (int i = 0; i < mask.size(); i++) {
-            QChar c = mask.at(i);
-            if (c.isNumber()) {
-                number[choise] += c;
-            } else if (c == '-') {
-                if (choise == 1)
-                    throw ExceptionMask(
-                            TypeError::Semantic,
-                            QString("[Nx-y] начиная с ")
-                                    + QString::number(fullMaskIndex + 1));
-                choise = 1;
-            } else
-                throw ExceptionMask(
-                        TypeError::Semantic,
-                        QString("[Nx-y] начиная с ")
-                                + QString::number(fullMaskIndex + 1));
-        }
-        if (number[0].isEmpty() || number[1].isEmpty()) {
-            throw ExceptionMask(
-                    TypeError::Semantic,
-                    QString("[Nx-y] начиная с ")
-                            + QString::number(fullMaskIndex + 1));
-        }
-
-        int first = number[0].toInt() - 1;
-        int second = number[1].toInt() - 1;
-        if (first > second || second >= name.size())
-            throw ExceptionMask(
-                    TypeError::Number,
-                    QString("[Nx-y] начиная с ")
-                            + QString::number(fullMaskIndex + 1),
-                    QString("не больше ") + QString::number(name.size()));
-        for (int i = first; i <= second; i++) {
-            totalName += name.at(i);
-        }
-        return;
-    } else if (mask.contains(',')) {
-        QString number[2];
-        int choise = 0;
-        for (int i = 0; i < mask.size(); i++) {
-            QChar c = mask.at(i);
-            if (c.isNumber()) {
-                number[choise] += c;
-            } else if (c == ',') {
-                if (choise == 1)
-                    throw ExceptionMask(
-                            TypeError::Semantic,
-                            QString("[Nx,y] начиная с ")
-                                    + QString::number(fullMaskIndex + 1));
+            if (mask.at(++i) == '-') {
+                i++;
                 choise = 1;
             } else {
                 throw ExceptionMask(
                         TypeError::Semantic,
-                        QString("[Nx,y] начиная с ")
+                        QString("[Nn--y] начиная с ")
                                 + QString::number(fullMaskIndex + 1));
             }
-        }
-        if (number[0].isEmpty() || number[1].isEmpty()) {
+        } else
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[Nn--y] начиная с ")
+                            + QString::number(fullMaskIndex + 1));
+    }
+    if (number[0].isEmpty() || number[1].isEmpty()) {
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[Nn--y] начиная с ")
+                        + QString::number(fullMaskIndex + 1));
+    }
+    int first = number[0].toInt() - 1;
+    int second = number[1].toInt();
+    if (first > name.size() || second > name.size())
+        throw ExceptionMask(
+                TypeError::Number,
+                QString("[Nn--y] начиная с ")
+                        + QString::number(fullMaskIndex + 1),
+                QString("не больше ") + QString::number(name.size()));
+    int diff = name.size() - second;
+
+    for (int i = first; i < diff; i++) {
+        totalName += name.at(i);
+    }
+}
+
+void Mask::maskNxdy(QString& mask)
+{
+    QString number[2];
+    int choise = 0;
+    for (int i = 0; i < mask.size(); i++) {
+        QChar c = mask.at(i);
+        if (c.isNumber()) {
+            number[choise] += c;
+        } else if (c == '-') {
+            if (choise == 1)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[Nx-y] начиная с ")
+                                + QString::number(fullMaskIndex + 1));
+            choise = 1;
+        } else
+            throw ExceptionMask(
+                    TypeError::Semantic,
+                    QString("[Nx-y] начиная с ")
+                            + QString::number(fullMaskIndex + 1));
+    }
+    if (number[0].isEmpty() || number[1].isEmpty()) {
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[Nx-y] начиная с ")
+                        + QString::number(fullMaskIndex + 1));
+    }
+
+    int first = number[0].toInt() - 1;
+    int second = number[1].toInt() - 1;
+    if (first > second || second >= name.size())
+        throw ExceptionMask(
+                TypeError::Number,
+                QString("[Nx-y] начиная с ")
+                        + QString::number(fullMaskIndex + 1),
+                QString("не больше ") + QString::number(name.size()));
+    for (int i = first; i <= second; i++) {
+        totalName += name.at(i);
+    }
+}
+
+void Mask::maskNxpy(QString& mask)
+{
+    QString number[2];
+    int choise = 0;
+    for (int i = 0; i < mask.size(); i++) {
+        QChar c = mask.at(i);
+        if (c.isNumber()) {
+            number[choise] += c;
+        } else if (c == ',') {
+            if (choise == 1)
+                throw ExceptionMask(
+                        TypeError::Semantic,
+                        QString("[Nx,y] начиная с ")
+                                + QString::number(fullMaskIndex + 1));
+            choise = 1;
+        } else {
             throw ExceptionMask(
                     TypeError::Semantic,
                     QString("[Nx,y] начиная с ")
                             + QString::number(fullMaskIndex + 1));
         }
+    }
+    if (number[0].isEmpty() || number[1].isEmpty()) {
+        throw ExceptionMask(
+                TypeError::Semantic,
+                QString("[Nx,y] начиная с ")
+                        + QString::number(fullMaskIndex + 1));
+    }
 
-        int first = number[0].toInt() - 1;
-        int second = number[1].toInt() + first;
+    int first = number[0].toInt() - 1;
+    int second = number[1].toInt() + first;
 
-        if (first > name.size() || second > name.size()) {
-            throw ExceptionMask(
-                    TypeError::Number,
-                    QString("[Nx,y] начиная с ")
-                            + QString::number(fullMaskIndex + 1),
-                    QString("не больше ") + QString::number(name.size()));
-        }
-        for (int i = first; i < second; i++) {
-            totalName += name.at(i);
-        }
+    if (first > name.size() || second > name.size()) {
+        throw ExceptionMask(
+                TypeError::Number,
+                QString("[Nx,y] начиная с ")
+                        + QString::number(fullMaskIndex + 1),
+                QString("не больше ") + QString::number(name.size()));
+    }
+    for (int i = first; i < second; i++) {
+        totalName += name.at(i);
+    }
+}
+
+void Mask::maskN(QString& mask)
+{
+    if (mask.endsWith('-')) {
+        maskNnd(mask);
+        return;
+    } else if (mask.at(0) == '-') {
+        maskNdn(mask);
+        return;
+    } else if (mask.contains("--")) {
+        maskNnddy(mask);
+        return;
+    } else if (mask.contains('-')) {
+        maskNxdy(mask);
+        return;
+    } else if (mask.contains(',')) {
+        maskNxpy(mask);
         return;
     } else {
         QString number;
@@ -510,4 +545,14 @@ uint Mask::getValue_C(uint index)
     uint value = beginValue.at(index);
     beginValue[index] += stepValue[index];
     return value;
+}
+
+uint Mask::pop_index()
+{
+    return index_C++;
+}
+
+void Mask::nulling_index()
+{
+    index_C = 0;
 }
