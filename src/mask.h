@@ -30,6 +30,11 @@ private:
     //функции прочтения отдельных масок
     void readMask(QString& mask);
     void maskN(QString& mask);
+    void maskNnd(QString& mask);
+    void maskNdn(QString& mask);
+    void maskNnddy(QString& mask);
+    void maskNxdy(QString& mask);
+    void maskNxpy(QString& mask);
     void maskE(QString& mask);
     void maskYMD(QString& mask);
     void maskHMS(QString& mask);
