@@ -9,6 +9,7 @@ using TypeError = ExceptionMask::TypeError;
 
 Mask::Mask(QString name, QString mask) : name(name), fullMask(mask)
 {
+    masks = UsingsMasks::None;
     checkBracketBalance();
 }
 
@@ -57,25 +58,53 @@ void Mask::readMask(QString& mask)
         return;
     }
     case 'E': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_E);
         if (mask.size() == 1)
             totalName += "/E/";
         else
             maskE(mask.remove(0, 1));
         return;
     }
-    case 'Y':
-    case 'M':
-    case 'D': {
+    case 'Y': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_Y);
         maskYMD(mask);
         return;
     }
-    case 'h':
-    case 'm':
+    case 'M': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_M);
+        maskYMD(mask);
+        return;
+    }
+    case 'D': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_M);
+        maskYMD(mask);
+        return;
+    }
+    case 'h': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_h);
+        maskHMS(mask);
+        return;
+    }
+    case 'm': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_m);
+        maskHMS(mask);
+        return;
+    }
     case 's': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_s);
         maskHMS(mask);
         return;
     }
     case 'C': {
+        masks = static_cast<UsingsMasks>(
+                (uint64_t)masks | (uint64_t)UsingsMasks::Mask_C);
         if (mask.size() == 1) {
             totalName += "/C" + QString::number(stepValue.size()) + "/";
             stepValue.push_back(1);

@@ -10,6 +10,18 @@ public:
     Mask(QString name, QString mask);
 
 private:
+    enum class UsingsMasks : uint64_t {
+        None = 0,
+        Mask_C = 1,
+        Mask_E = 1 << 1,
+        Mask_Y = 1 << 2,
+        Mask_M = 1 << 3,
+        Mask_D = 1 << 4,
+        Mask_h = 1 << 5,
+        Mask_m = 1 << 6,
+        Mask_s = 1 << 7
+    };
+    UsingsMasks masks;
     QString const name;      //Имя для замены
     QString fullMask;        //Полная маска файла
     QString totalName;       //Итоговое имя
