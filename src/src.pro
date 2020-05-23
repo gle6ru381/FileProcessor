@@ -26,6 +26,7 @@ SOURCES += \
     main.cpp \
     mainwidget.cpp \
     mainwindow.cpp \
+    mainwindowslots.cpp \
     mask.cpp \
     pushinsert.cpp \
     replace.cpp \
