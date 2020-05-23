@@ -18,6 +18,7 @@ PushInsert::PushInsert(QWidget* parent) : QTreeView(parent)
     QHeaderView* header = this->header();
     header->setSectionsMovable(false);
     header->setSectionResizeMode(QHeaderView::Fixed);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setHeader(header);
 
     connect(this,
@@ -37,11 +38,12 @@ void PushInsert::selectInfo(const QModelIndex& index)
 // Возвращает QFileInfo Всех файлов
 QFileInfoList PushInsert::selectedInfo() const
 {
-    auto indexes = selectedIndexes();
-    indexes.pop_back();
+    auto indexes = QTreeView::selectedIndexes();
     QFileInfoList infoList;
-    for (auto index : indexes) {
-        infoList.push_back(model->filePath(index));
+
+    for (auto index = indexes.begin(); index != indexes.end(); index++) {
+        infoList.push_back(QFileInfo(model->filePath(*index)));
+        index++;
     }
     return infoList;
 }

@@ -337,7 +337,6 @@ void MainWindow::selectBrowse(QFileInfo* info)
 
 void MainWindow::clickOk()
 {
-    auto list = pushInsert->selectedInfo();
     QProgressDialog progressDialog(this);
     progressDialog.setLabelText("Добавление файлов...");
     QProgressBar bar;
