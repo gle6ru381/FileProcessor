@@ -9,25 +9,24 @@ class Mask { //Класс для обработки масок
 public:
     Mask(QString name, QString mask);
 
-private:
+    // Перечисление и переменная используемых масок
     enum class UsingsMasks : uint64_t {
         None = 0,
         Mask_C = 1,
         Mask_E = 1 << 1,
-        Mask_Y = 1 << 2,
-        Mask_M = 1 << 3,
-        Mask_D = 1 << 4,
-        Mask_h = 1 << 5,
-        Mask_m = 1 << 6,
-        Mask_s = 1 << 7
+        Mask_YMD = 1 << 2,
+        Mask_hms = 1 << 5,
     };
     UsingsMasks masks;
+
+private:
     QString const name;      //Имя для замены
     QString fullMask;        //Полная маска файла
     QString totalName;       //Итоговое имя
     QVector<uint> stepValue; //Массив, хранящий значение шагов для шаблона [C]
     QVector<uint> beginValue; //Массив, хранящий значения чисел для подстановки
                               //для шаблона [C]
+    uint64_t index_C;         // Индекс счетчика
     //функции прочтения отдельных масок
     void readMask(QString& mask);
     void maskN(QString& mask);
@@ -44,6 +43,8 @@ public:
     QString area() const; // Возвращает имя для замены (name)
     uint getValue_C(uint index); //Возвращает и увеличиввает значение счетчика
                                  //по индексу
+    uint pop_index(); // Возвращение индекса счетчика и его инкремент
+    void nulling_index(); // Обнуление индекса счетчика
 };
 
 #endif // MASK_H

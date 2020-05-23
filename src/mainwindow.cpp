@@ -221,10 +221,8 @@ void MainWindow::readText()
         }
         Mask mask(strReplace, strMask);
         mask.readName();
-        exception = false;
         replacing(mask, strFind);
     } catch (int a) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString error;
@@ -264,7 +262,6 @@ void MainWindow::readText()
         dialog->setText(error);
         dialog->exec();
     } catch (ExceptionMask exp) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setStyleSheet("align=center");
         dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -282,10 +279,8 @@ void MainWindow::readText()
 
         dialog->exec();
     } catch (ExceptionFile exp) {
-        exception = true;
         showError(exp.error);
     } catch (ExceptionReplacing exp) {
-        exception = true;
         QMessageBox* dialog = new QMessageBox(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setText(exp.error);
@@ -295,9 +290,6 @@ void MainWindow::readText()
             dialog->setInformativeText("Часть файлов переименована");
         dialog->exec();
     }
-
-    if (exception)
-        return;
 }
 void MainWindow::clickBrowse()
 {
