@@ -58,6 +58,7 @@ void MainWindow::reset(bool error) // Откат для Vector
                 + reserveVector->at(i); // старое имя
         QFile(file.absoluteFilePath()).rename(newOldName); // Переименовываем
         mainWidget->changeTable(QFileInfo(newOldName), i); // Изменяем таблицу
+        mainWidget->resizeColumnsToContents();
     }
     reserveVector->clear(); // Очищаем вектор
     if (error) // Если произошла ошибка то бросаем исключение
@@ -77,6 +78,7 @@ void MainWindow::reset(QFile& oldNames, bool error)
         QString newOldName = file.absolutePath() + '/' + name; // старое имя
         QFile(file.absoluteFilePath()).rename(newOldName); // переименование
         mainWidget->changeTable(QFileInfo(newOldName), i); // изменяем таблицу
+        mainWidget->resizeColumnsToContents();
     }
     oldNames.remove(); // удаляем файл резерва
     if (error) // Если произошла ошибка бросаем исключение
@@ -178,6 +180,7 @@ void MainWindow::renameProcess(
         QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
+        mainWidget->resizeColumnsToContents();
     }
     progressDialog.deleteLater();
 }
@@ -214,6 +217,7 @@ void MainWindow::renameProcess(
         QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
+        mainWidget->resizeColumnsToContents();
     }
 }
 
@@ -248,5 +252,6 @@ void MainWindow::renameProcess(Mask& mask, QString& replacingArea)
         QString renaming(file.absolutePath() + '/' + totalName);
         QFile(file.absoluteFilePath()).rename(renaming);
         mainWidget->changeTable(QFileInfo(renaming), i); // Обновление таблицы
+        mainWidget->resizeColumnsToContents();
     }
 }

@@ -114,6 +114,4 @@ void MainWidget::changeTable(QFileInfo const& file, int row)
     setItem(row, 0, itemName);
     setItem(row, 1, itemDate);
     setItem(row, 2, itemPath);
-
-    this->resizeColumnsToContents();
 }
