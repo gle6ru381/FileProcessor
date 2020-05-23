@@ -63,21 +63,8 @@ void MainWindow::changeMethod(int id)
 
 void MainWindow::clickOk()
 {
-    QProgressDialog progressDialog(this);
-    progressDialog.setLabelText("Добавление файлов...");
-    QProgressBar bar;
-    bar.setFormat("%v из %m");
-    bar.setRange(0, mainWidget->rowCount());
-    progressDialog.setBar(&bar);
-    progressDialog.setCancelButton(nullptr);
-    progressDialog.show();
-    int i = 0;
-
     for (auto info : pushInsert->selectedInfo()) {
-        progressDialog.setValue(i);
-        QApplication::processEvents();
         mainWidget->addElement(&info);
-        i++;
     }
     insertDialog->close();
 }
