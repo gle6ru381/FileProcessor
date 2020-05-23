@@ -33,20 +33,6 @@ Pair convertE(QChar const* format, QString const extension)
     return std::make_pair(total, size);
 }
 
-Pair convertC(QChar const* format, Mask& mask)
-{
-    QString index;                           // Индекс счетчика
-    int size = 3;                            // Длина маски
-    for (int i = 0; format[i] != '/'; i++) { // считывание индекса
-        index += format[i];
-        size++;
-    }
-    uint n = mask.getValue_C(
-            index.toInt()); // Получение данных счетчика по индексу
-
-    return std::make_pair(QString::number(n), size);
-}
-
 void MainWindow::reset(bool error) // Откат для Vector
 {
     if (reserveVector->empty()) { // Если вектор пуст, бросаем исключение
