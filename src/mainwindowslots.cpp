@@ -63,7 +63,23 @@ void MainWindow::changeMethod(int id)
 
 void MainWindow::clickOk()
 {
-    for (auto info : pushInsert->selectedInfo()) {
+    auto progDialog = new QProgressDialog(this);
+    progDialog->setAttribute(Qt::WA_DeleteOnClose);
+    auto firstBar = new QProgressBar(progDialog);
+    firstBar->setFormat("%v из %m");
+    auto infos = pushInsert->selectedInfo();
+    firstBar->setRange(0, infos.size());
+    QVBoxLayout* progLayout = new QVBoxLayout(progDialog);
+    progLayout->addWidget(firstBar);
+    progDialog->setLayout(progLayout);
+
+    int i = 0;
+
+    for (auto info : infos) {
+        firstBar->setValue(i);
+        QApplication::processEvents();
+        i++;
+
         mainWidget->addElement(&info);
     }
     insertDialog->close();
