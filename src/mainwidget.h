@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfoList>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QProgressBar>
 #include <QProgressDialog>
@@ -14,7 +15,9 @@ class MainWidget : public QTableWidget { //Класс основного вид�
     Q_OBJECT
 public:
     MainWidget(QWidget* parent = nullptr);
-    void addElement(QFileInfo*); //Функция добавление файлов в виджет
+    void addElement(
+            QFileInfo*,
+            QDialog* progDialog); //Функция добавление файлов в виджет
     void changeTable(QFileInfo const& file, int row); //Изменение строки таблицы
 
 private:

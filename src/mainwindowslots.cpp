@@ -63,31 +63,37 @@ void MainWindow::changeMethod(int id)
 
 void MainWindow::clickOk()
 {
-    auto progDialog = new QProgressDialog(this);
+    auto progDialog = new QDialog(this, Qt::FramelessWindowHint);
+    progDialog->show();
+    QApplication::processEvents();
     progDialog->setAttribute(Qt::WA_DeleteOnClose);
-    auto firstBar = new QProgressBar(progDialog);
+    auto firstBar = new QProgressBar;
     firstBar->setFormat("%v из %m");
+    QApplication::processEvents();
     auto infos = pushInsert->selectedInfo();
     firstBar->setRange(0, infos.size());
-    QVBoxLayout* progLayout = new QVBoxLayout(progDialog);
+    QVBoxLayout* progLayout = new QVBoxLayout;
     progLayout->addWidget(firstBar);
+    QApplication::processEvents();
     progDialog->setLayout(progLayout);
+    QApplication::processEvents();
 
     int i = 0;
 
     for (auto info : infos) {
         firstBar->setValue(i);
+        progDialog->update();
         QApplication::processEvents();
         i++;
 
-        mainWidget->addElement(&info);
+        mainWidget->addElement(&info, progDialog);
     }
     insertDialog->close();
 }
 
 void MainWindow::selectBrowse(QFileInfo* info)
 {
-    mainWidget->addElement(info);
+    mainWidget->addElement(info, nullptr);
     insertDialog->close();
 }
 

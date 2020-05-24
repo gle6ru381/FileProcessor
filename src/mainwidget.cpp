@@ -1,8 +1,11 @@
 #include "mainwidget.h"
+#include <QApplication>
 #include <QDateTime>
 #include <QDropEvent>
 #include <QFileInfo>
 #include <QHeaderView>
+#include <QLabel>
+#include <QVBoxLayout>
 
 /* Этот файл содержит реализацию класса MainWidget, который
    характеризует окно со всеми файлами для переименования и
@@ -36,14 +39,53 @@ void MainWidget::dropEvent(QDropEvent* event)
             continue;
         }
         QFileInfo* info = new QFileInfo(url.toLocalFile());
-        addElement(info);
+        addElement(info, nullptr);
         delete info;
     }
 
     event->acceptProposedAction();
 }
 
-void MainWidget::addElement(QFileInfo* file)
+using Pair = std::pair<QProgressBar*, QLabel*>;
+
+void setPair(QDialog* dialog, Pair& newPair, Pair& oldPair)
+{
+    auto layout = static_cast<QVBoxLayout*>(dialog->layout());
+    layout->replaceWidget(oldPair.second, newPair.second);
+    layout->replaceWidget(oldPair.first, newPair.first);
+    delete oldPair.second;
+    delete oldPair.first;
+    dialog->setLayout(layout);
+}
+
+Pair changeProgBar(QDialog* dialog, QString const dirName)
+{
+    auto layout = static_cast<QVBoxLayout*>(dialog->layout());
+    auto label = new QLabel("Добавление " + dirName);
+    auto secondBar = new QProgressBar;
+
+    layout->addWidget(label);
+    layout->addWidget(secondBar);
+
+    return std::make_pair(secondBar, label);
+}
+
+void removePair(QDialog* dialog, Pair& pair)
+{
+    auto layout = static_cast<QVBoxLayout*>(dialog->layout());
+    layout->removeWidget(pair.first);
+    layout->removeWidget(pair.second);
+    delete pair.first;
+    delete pair.second;
+    dialog->setLayout(nullptr);
+    dialog->update();
+    QApplication::processEvents();
+    dialog->setLayout(layout);
+    dialog->update();
+    QApplication::processEvents();
+}
+
+void MainWidget::addElement(QFileInfo* file, QDialog* progDialog)
 {
     auto insert = [this](QFileInfo* file) {
         int row = this->rowCount();
@@ -58,16 +100,35 @@ void MainWidget::addElement(QFileInfo* file)
         this->setItem(row, 2, new QTableWidgetItem(file->filePath()));
     };
 
-    std::function<void(QDir*)> insertDir = [&, insert](QDir* dir) {
-        foreach (
-                auto file,
-                dir->entryInfoList(
-                        QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+    std::function<void(QDir*, Pair)> insertDir = [&, insert, progDialog](
+                                                         QDir* dir, Pair pair) {
+        auto bar = pair.first;
+        auto files = dir->entryInfoList(
+                QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files);
+        bar->setRange(0, files.size());
+        int i = 0;
+
+        foreach (auto file, files) {
+            bar->setValue(i);
+            QApplication::processEvents();
+            i++;
+
             if (file.isFile())
                 insert(&file);
             else {
                 QDir* subDir = new QDir(file.absoluteFilePath());
-                insertDir(subDir);
+
+                auto newPair = changeProgBar(progDialog, file.fileName());
+
+                removePair(progDialog, pair);
+
+                insertDir(subDir, newPair);
+
+                auto oldPair = changeProgBar(progDialog, dir->dirName());
+                bar = pair.first = oldPair.first;
+                pair.second = oldPair.second;
+                setPair(progDialog, oldPair, newPair);
+
                 delete subDir;
             }
         }
@@ -75,7 +136,12 @@ void MainWidget::addElement(QFileInfo* file)
 
     if (file->isDir()) {
         QDir* dir = new QDir(file->absoluteFilePath());
-        insertDir(dir);
+
+        auto pair = changeProgBar(progDialog, file->fileName());
+        QApplication::processEvents();
+
+        insertDir(dir, pair);
+
         delete dir;
     } else {
         insert(file);
