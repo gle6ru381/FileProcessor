@@ -26,10 +26,11 @@ SOURCES += \
     main.cpp \
     mainwidget.cpp \
     mainwindow.cpp \
+    mainwindowinit.cpp \
+    mainwindowreplace.cpp \
     mainwindowslots.cpp \
     mask.cpp \
     pushinsert.cpp \
-    replace.cpp \
     styleSheet.cpp
 
 qnx: target.path = /tmp/$${TARGET}/bin

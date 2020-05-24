@@ -110,6 +110,12 @@ void MainWindow::clickBrowse()
     insertDialog->exec();
 }
 
+void MainWindow::mask_buttons()
+{
+    QPushButton* button = (QPushButton*)sender();
+    mask->setText(mask->text() + button->text());
+}
+
 void MainWindow::clickRollback()
 {
     if (choiseMethod == MethodReserve::FILE) {
