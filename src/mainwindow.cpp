@@ -6,9 +6,8 @@
 #include <QProgressBar>
 #include <QProgressDialog>
 
-/* Этот файл содержит реализацию основного окна приложения,
-   а также обработку событий всех кнопок.
-*/
+/* Этот файл содержит реализацию основного окна приложения
+ */
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {

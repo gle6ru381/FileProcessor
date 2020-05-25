@@ -51,6 +51,7 @@ using Bar = ProgressDialog::Bar;
 
 void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
 {
+    // Лямбда добавления отдельного файла
     auto insert = [this](QFileInfo* file) {
         int row = this->rowCount();
         this->insertRow(row);
@@ -64,6 +65,7 @@ void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
         this->setItem(row, 2, new QTableWidgetItem(file->filePath()));
     };
 
+    // Лямбда добавления директории
     std::function<void(QDir*)> insertDir = [&, insert, progDialog](QDir* dir) {
         auto bar = progDialog->bar(Bar::Second);
         auto files = dir->entryInfoList(
@@ -97,6 +99,7 @@ void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
         }
     };
 
+    // Вызов лямбд в зависимости от типа файла
     if (file->isDir()) {
         QDir* dir = new QDir(file->absoluteFilePath());
 
@@ -116,6 +119,7 @@ void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
     this->resizeColumnsToContents();
 }
 
+// Функции для реализации добавления элементов с помощью мыши
 void MainWidget::dragLeaveEvent(QDragLeaveEvent* event)
 {
     event->accept();
@@ -136,6 +140,7 @@ void MainWidget::clearContents()
     setRowCount(0);
 }
 
+// Функция для изменения значения таблицы в определенной строке
 void MainWidget::changeTable(QFileInfo const& file, int row)
 {
     auto itemName = new QTableWidgetItem(file.fileName());

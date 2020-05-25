@@ -1,5 +1,8 @@
 #include "progressdialog.h"
 
+/* В этом файле содержится реализация окна прогресса для добавления файлов */
+
+// Основной конструктор диалога
 ProgressDialog::ProgressDialog(QWidget* parent) : QDialog(parent)
 {
     bars = qMakePair(nullptr, nullptr);
@@ -8,6 +11,7 @@ ProgressDialog::ProgressDialog(QWidget* parent) : QDialog(parent)
     setMaximumSize(330, 120);
 }
 
+//Остальные конструкторы
 ProgressDialog::ProgressDialog(Qt::WindowFlags flags, QWidget* parent)
     : ProgressDialog(parent)
 {
@@ -33,6 +37,7 @@ inline QVBoxLayout* ProgressDialog::layout() const
     return static_cast<QVBoxLayout*>(QDialog::layout());
 }
 
+//Установка индикатора прогресса (первого или второго)
 void ProgressDialog::setBar(ProgressBar* const bar, Bar choise)
 {
     if (choise == Bar::First) {
@@ -40,6 +45,7 @@ void ProgressDialog::setBar(ProgressBar* const bar, Bar choise)
         if (bars.first) {
             layout->replaceWidget(bars.first->label(), bar->label());
             layout->replaceWidget(bars.first, bar);
+            delete bars.first->label();
             delete bars.first;
         } else {
             layout->addWidget(bar->label());
@@ -61,6 +67,7 @@ void ProgressDialog::setBar(ProgressBar* const bar, Bar choise)
     }
 }
 
+// Возвращение индикатора
 ProgressBar* ProgressDialog::bar(Bar choise) const
 {
     if (choise == Bar::First) {
@@ -70,16 +77,19 @@ ProgressBar* ProgressDialog::bar(Bar choise) const
     }
 }
 
+// Удаление индикатора
 void ProgressDialog::removeBar(Bar choise)
 {
     if (choise == Bar::First) {
         if (!bars.first)
             return;
+        delete bars.first->label();
         delete bars.first;
         bars.first = nullptr;
     } else {
         if (!bars.second)
             return;
+        delete bars.second->label();
         delete bars.second;
         bars.second = nullptr;
     }

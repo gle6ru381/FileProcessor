@@ -1,6 +1,9 @@
 #include "progressbar.h"
 #include <QApplication>
 
+/* В этом файле содержится реализация индикатора прогресса для добавления файлов
+ */
+
 ProgressBar::ProgressBar(QWidget* parent) : QProgressBar(parent)
 {
     labelName = nullptr;
@@ -23,6 +26,7 @@ ProgressBar::ProgressBar(int min, int max, QLabel* label, QWidget* parent)
     this->setRange(min, max);
 }
 
+// Установка значения индикатора
 void ProgressBar::setValue(int val)
 {
     QProgressBar::setValue(val);
@@ -31,16 +35,19 @@ void ProgressBar::setValue(int val)
             | QEventLoop::ExcludeSocketNotifiers);
 }
 
+// Возвращает имя индикатора
 QString ProgressBar::name() const
 {
     return labelName->text();
 }
 
+// Возвращает указатель на подпись с именем индикатора
 QLabel* ProgressBar::label() const
 {
     return labelName;
 }
 
+// Устанавливает имя индикатора
 void ProgressBar::setName(const QString& name)
 {
     if (!labelName)
@@ -48,6 +55,7 @@ void ProgressBar::setName(const QString& name)
     labelName->setText(name);
 }
 
+// Устанавливает новую подпись
 void ProgressBar::setLabel(QLabel* label)
 {
     if (labelName)

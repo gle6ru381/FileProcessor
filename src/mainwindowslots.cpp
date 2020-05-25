@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QMessageBox>
 
+/* Этот файл содерщит реализацию обработчиков событий для основного окна */
+
 void MainWindow::changeMethod(int id)
 {
     switch (id) {

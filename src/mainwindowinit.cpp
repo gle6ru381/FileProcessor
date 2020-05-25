@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <QRadioButton>
 
+/* Этот файл содержит функции инициализации виджетов главного окна */
+
 void MainWindow::buttonLayoutInit(QVBoxLayout* maskLayout, QFrame* maskFrame)
 {
     maskFrame->setLayout(maskLayout);
