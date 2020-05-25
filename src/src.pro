@@ -19,6 +19,8 @@ HEADERS += \
     mainwidget.h \
     mainwindow.h \
     mask.h \
+    progressbar.h \
+    progressdialog.h \
     pushinsert.h
 
 SOURCES += \
@@ -30,6 +32,8 @@ SOURCES += \
     mainwindowreplace.cpp \
     mainwindowslots.cpp \
     mask.cpp \
+    progressbar.cpp \
+    progressdialog.cpp \
     pushinsert.cpp \
     styleSheet.cpp
 
