@@ -1,5 +1,7 @@
 #include "mainwindow.h"
+#include "progressdialog.h"
 #include <QApplication>
+#include <QLabel>
 #include <QMessageBox>
 
 void MainWindow::changeMethod(int id)
@@ -61,17 +63,42 @@ void MainWindow::changeMethod(int id)
     }
 }
 
+using Bar = ProgressDialog::Bar;
+
 void MainWindow::clickOk()
 {
-    for (auto info : pushInsert->selectedInfo()) {
-        mainWidget->addElement(&info);
+    insertDialog->hide();
+    auto progDialog = new ProgressDialog(
+            "Добавление файлов...",
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowTransparentForInput
+                    | Qt::MSWindowsFixedSizeDialogHint);
+    progDialog->show();
+    progDialog->setAttribute(Qt::WA_DeleteOnClose);
+    progDialog->setWindowFlags(
+            progDialog->windowFlags() & ~Qt::WindowCloseButtonHint);
+    auto infos = pushInsert->selectedInfo();
+    auto firstBar = new ProgressBar(0, infos.size(), nullptr, progDialog);
+    firstBar->setFormat("%v из %m");
+    firstBar->setLabel(new QLabel(""));
+    progDialog->setBar(firstBar, Bar::First);
+
+    int i = 0;
+
+    for (auto info : infos) {
+        firstBar->setName(info.fileName());
+        firstBar->setValue(i);
+        i++;
+
+        mainWidget->addElement(&info, progDialog);
     }
     insertDialog->close();
+    delete progDialog;
 }
 
 void MainWindow::selectBrowse(QFileInfo* info)
 {
-    mainWidget->addElement(info);
+    mainWidget->addElement(info, nullptr);
     insertDialog->close();
 }
 
@@ -82,7 +109,12 @@ void MainWindow::clickCancel()
 
 void MainWindow::clickBrowse()
 {
-    insertDialog = new QDialog(this);
+    insertDialog = new QDialog(
+            this,
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowCloseButtonHint);
+    insertDialog->setMaximumSize(400, 600);
+    insertDialog->setMinimumSize(400, 600);
     insertDialog->setAttribute(Qt::WA_DeleteOnClose);
     auto style = insertStyleSheet();
     insertDialog->setStyleSheet(style.first);
@@ -108,6 +140,12 @@ void MainWindow::clickBrowse()
     insertDialog->setLayout(layout);
     insertDialog->resize(400, 500);
     insertDialog->exec();
+}
+
+void MainWindow::mask_buttons()
+{
+    QPushButton* button = (QPushButton*)sender();
+    mask->setText(mask->text() + button->text());
 }
 
 void MainWindow::clickRollback()

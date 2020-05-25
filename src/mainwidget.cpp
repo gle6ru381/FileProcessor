@@ -1,8 +1,12 @@
 #include "mainwidget.h"
+#include <QApplication>
 #include <QDateTime>
 #include <QDropEvent>
 #include <QFileInfo>
 #include <QHeaderView>
+#include <QLabel>
+#include <QPair>
+#include <QVBoxLayout>
 
 /* Этот файл содержит реализацию класса MainWidget, который
    характеризует окно со всеми файлами для переименования и
@@ -36,14 +40,16 @@ void MainWidget::dropEvent(QDropEvent* event)
             continue;
         }
         QFileInfo* info = new QFileInfo(url.toLocalFile());
-        addElement(info);
+        addElement(info, nullptr);
         delete info;
     }
 
     event->acceptProposedAction();
 }
 
-void MainWidget::addElement(QFileInfo* file)
+using Bar = ProgressDialog::Bar;
+
+void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
 {
     auto insert = [this](QFileInfo* file) {
         int row = this->rowCount();
@@ -58,16 +64,34 @@ void MainWidget::addElement(QFileInfo* file)
         this->setItem(row, 2, new QTableWidgetItem(file->filePath()));
     };
 
-    std::function<void(QDir*)> insertDir = [&, insert](QDir* dir) {
-        foreach (
-                auto file,
-                dir->entryInfoList(
-                        QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+    std::function<void(QDir*)> insertDir = [&, insert, progDialog](QDir* dir) {
+        auto bar = progDialog->bar(Bar::Second);
+        auto files = dir->entryInfoList(
+                QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files);
+        bar->setRange(0, files.size() + 1);
+        int i = 0;
+
+        foreach (auto file, files) {
+            bar->setValue(i);
+            i++;
+
             if (file.isFile())
                 insert(&file);
             else {
                 QDir* subDir = new QDir(file.absoluteFilePath());
+
+                progDialog->setBar(
+                        new ProgressBar(
+                                new QLabel("Добавление " + file.fileName()),
+                                progDialog),
+                        Bar::Second);
+
                 insertDir(subDir);
+
+                bar = new ProgressBar(
+                        new QLabel("Добавление " + dir->dirName()), progDialog);
+                progDialog->setBar(bar, Bar::Second);
+
                 delete subDir;
             }
         }
@@ -75,7 +99,15 @@ void MainWidget::addElement(QFileInfo* file)
 
     if (file->isDir()) {
         QDir* dir = new QDir(file->absoluteFilePath());
+
+        progDialog->setBar(
+                new ProgressBar(
+                        new QLabel("Добавление " + file->fileName()),
+                        progDialog),
+                Bar::Second);
+
         insertDir(dir);
+
         delete dir;
     } else {
         insert(file);
