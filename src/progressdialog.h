@@ -4,11 +4,14 @@
 #include "progressbar.h"
 #include <QDialog>
 #include <QPair>
+#include <QVBoxLayout>
 
 class ProgressDialog : public QDialog {
     Q_OBJECT
 private:
     QPair<ProgressBar*, ProgressBar*> bars;
+
+    inline QVBoxLayout* layout() const;
 
 public:
     enum class Bar { First, Second };

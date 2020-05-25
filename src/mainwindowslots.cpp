@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "progressdialog.h"
 #include <QApplication>
 #include <QLabel>
 #include <QMessageBox>
@@ -62,40 +63,35 @@ void MainWindow::changeMethod(int id)
     }
 }
 
+using Bar = ProgressDialog::Bar;
+
 void MainWindow::clickOk()
 {
-    auto progDialog = new QDialog(this);
+    insertDialog->hide();
+    auto progDialog = new ProgressDialog(
+            "Переименование...",
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
     progDialog->show();
     progDialog->setAttribute(Qt::WA_DeleteOnClose);
-    auto firstBar = new QProgressBar;
-    firstBar->setFormat("%v из %m");
+    progDialog->setWindowFlags(
+            progDialog->windowFlags() & ~Qt::WindowCloseButtonHint);
     auto infos = pushInsert->selectedInfo();
-    firstBar->setRange(0, infos.size());
-    QVBoxLayout* progLayout = new QVBoxLayout;
-    QLabel* temp = new QLabel("");
-    progLayout->addWidget(temp);
-    progLayout->addWidget(firstBar);
-    progDialog->setLayout(progLayout);
+    auto firstBar = new ProgressBar(0, infos.size(), nullptr, progDialog);
+    firstBar->setFormat("%v из %m");
+    firstBar->setLabel(new QLabel(""));
+    progDialog->setBar(firstBar, Bar::First);
 
     int i = 0;
-    bool first = true;
 
     for (auto info : infos) {
-        QLabel* fileName = new QLabel(info.fileName());
-        if (first) {
-            progLayout->replaceWidget(temp, fileName);
-        }
-        progDialog->setLayout(progLayout);
+        firstBar->setName(info.fileName());
         firstBar->setValue(i);
-        progDialog->update();
-        QApplication::processEvents();
         i++;
 
         mainWidget->addElement(&info, progDialog);
-        delete fileName;
     }
-    delete temp;
     insertDialog->close();
+    delete progDialog;
 }
 
 void MainWindow::selectBrowse(QFileInfo* info)
