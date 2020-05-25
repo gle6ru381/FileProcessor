@@ -20,6 +20,7 @@ HEADERS += \
     mainwindow.h \
     mask.h \
     progressbar.h \
+    progressdialog.h \
     pushinsert.h
 
 SOURCES += \
@@ -32,6 +33,7 @@ SOURCES += \
     mainwindowslots.cpp \
     mask.cpp \
     progressbar.cpp \
+    progressdialog.cpp \
     pushinsert.cpp \
     styleSheet.cpp
 
