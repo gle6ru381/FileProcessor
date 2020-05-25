@@ -100,7 +100,13 @@ void MainWindow::clickOk()
 
 void MainWindow::selectBrowse(QFileInfo* info)
 {
-    mainWidget->addElement(info, nullptr);
+    auto progDialog = new ProgressDialog(
+            "Добавление файлов...",
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowTransparentForInput
+                    | Qt::MSWindowsFixedSizeDialogHint);
+    progDialog->show();
+    mainWidget->addElement(info, progDialog);
     insertDialog->close();
 }
 

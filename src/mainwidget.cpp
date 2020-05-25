@@ -29,25 +29,39 @@ MainWidget::MainWidget(QWidget* parent) : QTableWidget(parent)
     this->verticalHeader()->hide();
 }
 
+using Bar = ProgressDialog::Bar;
+
 void MainWidget::dropEvent(QDropEvent* event)
 {
     const QMimeData* mimeData = event->mimeData();
 
     if (!mimeData->hasUrls())
         return;
+
+    auto progDialog = new ProgressDialog("Добавление файлов...");
+    progDialog->show();
+    auto urls = mimeData->urls();
+    auto firstBar = new ProgressBar(0, urls.size(), nullptr, progDialog);
+    firstBar->setFormat("%v из %m");
+    firstBar->setLabel(new QLabel(""));
+    progDialog->setBar(firstBar, Bar::First);
+    int i = 0;
+
     for (QUrl url : mimeData->urls()) {
         if (url.scheme() != "file") {
             continue;
         }
         QFileInfo* info = new QFileInfo(url.toLocalFile());
-        addElement(info, nullptr);
+
+        firstBar->setName(info->fileName());
+        firstBar->setValue(i++);
+
+        addElement(info, progDialog);
         delete info;
     }
 
     event->acceptProposedAction();
 }
-
-using Bar = ProgressDialog::Bar;
 
 void MainWidget::addElement(QFileInfo* file, ProgressDialog* progDialog)
 {
