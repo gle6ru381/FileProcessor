@@ -69,8 +69,10 @@ void MainWindow::clickOk()
 {
     insertDialog->hide();
     auto progDialog = new ProgressDialog(
-            "Переименование...",
-            Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
+            "Добавление файлов...",
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowTransparentForInput
+                    | Qt::MSWindowsFixedSizeDialogHint);
     progDialog->show();
     progDialog->setAttribute(Qt::WA_DeleteOnClose);
     progDialog->setWindowFlags(
@@ -107,7 +109,12 @@ void MainWindow::clickCancel()
 
 void MainWindow::clickBrowse()
 {
-    insertDialog = new QDialog(this);
+    insertDialog = new QDialog(
+            this,
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowCloseButtonHint);
+    insertDialog->setMaximumSize(400, 600);
+    insertDialog->setMinimumSize(400, 600);
     insertDialog->setAttribute(Qt::WA_DeleteOnClose);
     auto style = insertStyleSheet();
     insertDialog->setStyleSheet(style.first);

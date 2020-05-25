@@ -78,7 +78,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     setCentralWidget(centralWidget);
 
     initStyleSheet();
-    this->resize(800, 600);
+
+    this->setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+    this->setMaximumSize(800, 860);
+    this->setMinimumSize(800, 860);
 }
 
 void MainWindow::readText()

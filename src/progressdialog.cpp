@@ -4,6 +4,8 @@ ProgressDialog::ProgressDialog(QWidget* parent) : QDialog(parent)
 {
     bars = qMakePair(nullptr, nullptr);
     setLayout(new QVBoxLayout(this));
+    setMinimumSize(330, 120);
+    setMaximumSize(330, 120);
 }
 
 ProgressDialog::ProgressDialog(Qt::WindowFlags flags, QWidget* parent)
