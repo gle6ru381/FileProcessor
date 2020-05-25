@@ -41,9 +41,8 @@ void MainWidget::dropEvent(QDropEvent* event)
     auto progDialog = new ProgressDialog("Добавление файлов...");
     progDialog->show();
     auto urls = mimeData->urls();
-    auto firstBar = new ProgressBar(0, urls.size(), nullptr, progDialog);
+    auto firstBar = new ProgressBar(0, urls.size(), new QLabel(""), progDialog);
     firstBar->setFormat("%v из %m");
-    firstBar->setLabel(new QLabel(""));
     progDialog->setBar(firstBar, Bar::First);
     int i = 0;
 
@@ -60,6 +59,7 @@ void MainWidget::dropEvent(QDropEvent* event)
         delete info;
     }
 
+    delete progDialog;
     event->acceptProposedAction();
 }
 

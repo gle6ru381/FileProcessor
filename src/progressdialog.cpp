@@ -9,27 +9,16 @@ ProgressDialog::ProgressDialog(QWidget* parent) : QDialog(parent)
     setLayout(new QVBoxLayout(this));
     setMinimumSize(330, 120);
     setMaximumSize(330, 120);
+    setWindowFlags(
+            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+            | Qt::WindowTransparentForInput | Qt::MSWindowsFixedSizeDialogHint);
 }
 
 //Остальные конструкторы
-ProgressDialog::ProgressDialog(Qt::WindowFlags flags, QWidget* parent)
-    : ProgressDialog(parent)
-{
-    setWindowFlags(flags);
-}
-
 ProgressDialog::ProgressDialog(QString const& title, QWidget* parent)
     : ProgressDialog(parent)
 {
     setWindowTitle(title);
-}
-
-ProgressDialog::ProgressDialog(
-        QString const& title, Qt::WindowFlags flags, QWidget* parent)
-    : ProgressDialog(parent)
-{
-    setWindowTitle(title);
-    setWindowFlags(flags);
 }
 
 inline QVBoxLayout* ProgressDialog::layout() const

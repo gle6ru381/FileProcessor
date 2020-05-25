@@ -70,19 +70,13 @@ using Bar = ProgressDialog::Bar;
 void MainWindow::clickOk()
 {
     insertDialog->hide();
-    auto progDialog = new ProgressDialog(
-            "Добавление файлов...",
-            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                    | Qt::WindowTransparentForInput
-                    | Qt::MSWindowsFixedSizeDialogHint);
+    auto progDialog = new ProgressDialog("Добавление файлов...");
     progDialog->show();
     progDialog->setAttribute(Qt::WA_DeleteOnClose);
-    progDialog->setWindowFlags(
-            progDialog->windowFlags() & ~Qt::WindowCloseButtonHint);
     auto infos = pushInsert->selectedInfo();
-    auto firstBar = new ProgressBar(0, infos.size(), nullptr, progDialog);
+    auto firstBar
+            = new ProgressBar(0, infos.size(), new QLabel(""), progDialog);
     firstBar->setFormat("%v из %m");
-    firstBar->setLabel(new QLabel(""));
     progDialog->setBar(firstBar, Bar::First);
 
     int i = 0;
@@ -100,14 +94,12 @@ void MainWindow::clickOk()
 
 void MainWindow::selectBrowse(QFileInfo* info)
 {
-    auto progDialog = new ProgressDialog(
-            "Добавление файлов...",
-            Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                    | Qt::WindowTransparentForInput
-                    | Qt::MSWindowsFixedSizeDialogHint);
+    delete insertDialog;
+    auto progDialog = new ProgressDialog("Добавление файлов...");
     progDialog->show();
+    QApplication::processEvents();
     mainWidget->addElement(info, progDialog);
-    insertDialog->close();
+    delete progDialog;
 }
 
 void MainWindow::clickCancel()

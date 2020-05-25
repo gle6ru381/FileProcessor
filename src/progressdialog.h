@@ -16,12 +16,7 @@ private:
 public:
     enum class Bar { First, Second };
     ProgressDialog(QWidget* parent = nullptr);
-    ProgressDialog(Qt::WindowFlags flags, QWidget* parent = nullptr);
     ProgressDialog(QString const& title, QWidget* parent = nullptr);
-    ProgressDialog(
-            QString const& title,
-            Qt::WindowFlags flags,
-            QWidget* parent = nullptr);
 
     void setBar(ProgressBar* const bar, Bar choise);
     ProgressBar* bar(Bar choise) const;
